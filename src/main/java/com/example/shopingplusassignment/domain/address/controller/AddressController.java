@@ -51,6 +51,13 @@ public class AddressController {
 		return new ResponseEntity<>(addressService.findOne(addressId,userId));
 	}
 
+	@GetMapping
+	public ResponseEntity<DetailAddressResponseDto> findDefaultAddress (
+
+	) {
+		return new ResponseEntity<>(addressService.findDefaultOne(userId));
+	}
+
 	@PatchMapping("/{addressId}")
 	public ResponseEntity<DetailAddressResponseDto> updateAddress (
 		@PathVariable Long addressId,
