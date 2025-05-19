@@ -32,6 +32,13 @@ public class AddressController {
 
 	private final AddressServiceImpl addressService;
 
+	/**
+	 * 배송지 생성 요청 컨트롤러
+	 *
+	 * @param requestDto 배송지 생성 요청 정보가 담긴 {@link SaveAddressRequestDto} 객체
+	 * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+	 * @return 생성된 배송지 정보가 담긴 {@link SaveAddressResponseDto} 객체
+	 */
 	@PostMapping
 	public ResponseEntity<SaveAddressResponseDto> saveAddress (
 		@RequestBody SaveAddressRequestDto requestDto,
@@ -41,6 +48,12 @@ public class AddressController {
 		return new ResponseEntity<>(addressService.save(requestDto,userId), HttpStatus.OK);
 	}
 
+	/**
+	 * 배송지 전체 조회 요청 컨트롤러
+	 *
+	 * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+	 * @return 유저의 모든 배송지 정보가 담긴 {@link List<AddressResponseDto>} 객체
+	 */
 	@GetMapping
 	public ResponseEntity<List<AddressResponseDto>> findAllAddress (
 		@AuthenticationPrincipal AuthUser authUser
@@ -49,6 +62,13 @@ public class AddressController {
 		return new ResponseEntity<>(addressService.findAll(userId), HttpStatus.OK);
 	}
 
+	/**
+	 * 배송지 단건 조회 요청 컨트롤러
+	 *
+	 * @param addressId 조회할 배송지의 ID
+	 * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+	 * @return 유저의 배송지 정보가 담긴 {@link DetailAddressResponseDto} 객체
+	 */
 	@GetMapping("/{addressId}")
 	public ResponseEntity<DetailAddressResponseDto> findOneAddress (
 		@PathVariable Long addressId,
@@ -58,6 +78,12 @@ public class AddressController {
 		return new ResponseEntity<>(addressService.findOne(addressId,userId), HttpStatus.OK);
 	}
 
+	/**
+	 * 기본 배송지 조회 요청 컨트롤러
+	 *
+	 * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+	 * @return 유저의 기본 배송지 정보가 담긴 {@link DetailAddressResponseDto} 객체
+	 */
 	@GetMapping
 	public ResponseEntity<DetailAddressResponseDto> findDefaultAddress (
 		@AuthenticationPrincipal AuthUser authUser
@@ -66,6 +92,14 @@ public class AddressController {
 		return new ResponseEntity<>(addressService.findDefaultOne(userId), HttpStatus.OK);
 	}
 
+	/**
+	 * 배송지 수정 요청 컨트롤러
+	 *
+	 * @param addressId 조회할 배송지의 ID
+	 * @param resquestDto 배송지 수정 요청 정보가 담긴 {@link UpdateAddressRequestDto} 객체
+	 * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+	 * @return 수정된 배송지 정보가 담긴 {@link DetailAddressResponseDto} 객체
+	 */
 	@PatchMapping("/{addressId}")
 	public ResponseEntity<DetailAddressResponseDto> updateAddress (
 		@PathVariable Long addressId,
@@ -76,6 +110,13 @@ public class AddressController {
 		return new ResponseEntity<>(addressService.update(addressId,resquestDto, userId), HttpStatus.OK);
 	}
 
+	/**
+	 * 배송지 삭제 요청 컨트롤러
+	 *
+	 * @param addressId 조회할 배송지의 ID
+	 * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+	 * @return 메세지 응답, 성공 - 200 / 실패 - 400
+	 */
 	@DeleteMapping("/{addressId}")
 	public ResponseEntity<String> deleteAddress (
 		@PathVariable Long addressId,
