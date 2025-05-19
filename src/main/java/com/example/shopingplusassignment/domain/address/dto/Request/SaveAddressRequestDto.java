@@ -26,6 +26,8 @@ public class SaveAddressRequestDto {
 
 	private String deliveryDescription;
 
-	private boolean isDefaultAddress;
+	private Boolean isDefaultAddress;
+
+
 
 }

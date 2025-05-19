@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.shopingplusassignment.domain.address.dto.Request.SaveAddressRequestDto;
 import com.example.shopingplusassignment.domain.address.dto.Request.UpdateAddressRequestDto;
-import com.example.shopingplusassignment.domain.address.dto.Response.FindAddressResponseDto;
-import com.example.shopingplusassignment.domain.address.dto.Response.SaveAddressResponseDto;
+import com.example.shopingplusassignment.domain.address.dto.Response.AddressResponseDto;
+import com.example.shopingplusassignment.domain.address.dto.Response.DetailAddressResponseDto;
 import com.example.shopingplusassignment.domain.address.service.AddressServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +28,7 @@ public class AddressController {
 	private final AddressServiceImpl addressService;
 
 	@PostMapping
-	public ResponseEntity<SaveAddressResponseDto> saveAddress (
+	public ResponseEntity<DetailAddressResponseDto> saveAddress (
 		@RequestBody SaveAddressRequestDto requestDto
 
 	) {
@@ -36,14 +36,14 @@ public class AddressController {
 	}
 
 	@GetMapping
-	public List<ResponseEntity<SaveAddressResponseDto>> findAllAddress (
+	public List<ResponseEntity<AddressResponseDto>> findAllAddress (
 
 	) {
 		return new ResponseEntity<>(addressService.findAll(userId));
 	}
 
 	@GetMapping("/{addressId}")
-	public ResponseEntity<FindAddressResponseDto> findOneAddress (
+	public ResponseEntity<DetailAddressResponseDto> findOneAddress (
 		@PathVariable Long addressId
 
 	) {
@@ -51,7 +51,7 @@ public class AddressController {
 	}
 
 	@PatchMapping("/{addressId}")
-	public ResponseEntity<FindAddressResponseDto> updateAddress (
+	public ResponseEntity<DetailAddressResponseDto> updateAddress (
 		@PathVariable Long addressId,
 		@RequestBody UpdateAddressRequestDto resquestDto
 
@@ -64,7 +64,7 @@ public class AddressController {
 		@PathVariable Long addressId
 
 	) {
-		addressService.delete(addressId);
+		addressService.delete(addressId, userId);
 		return ResponseEntity.ok("배송정보가 삭제되었습니다");
 	}
 
