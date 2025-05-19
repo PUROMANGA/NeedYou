@@ -9,8 +9,8 @@ import com.example.shopingplusassignment.domain.comment.entity.Comment;
 
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-	Optional<Comment> findById(Long id);
+	Optional<Comment> findByIdAndDeletedAtIsNull(Long id);
 
-	Page<Comment>  findCommentByRatingBetween(int min, int max, Pageable pageable);
+	Page<Comment>  findCommentByRatingBetweenAndDeletedAtIsNull(int min, int max, Pageable pageable);
 
 }
