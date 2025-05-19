@@ -8,10 +8,11 @@ import com.example.shopingplusassignment.domain.address.dto.Request.SaveAddressR
 import com.example.shopingplusassignment.domain.address.dto.Request.UpdateAddressRequestDto;
 import com.example.shopingplusassignment.domain.address.dto.Response.AddressResponseDto;
 import com.example.shopingplusassignment.domain.address.dto.Response.DetailAddressResponseDto;
+import com.example.shopingplusassignment.domain.address.dto.Response.SaveAddressResponseDto;
 
 @Service
 public interface AddressService {
-	DetailAddressResponseDto save (SaveAddressRequestDto requestDto ,Long userId);
+	SaveAddressResponseDto save (SaveAddressRequestDto requestDto ,Long userId);
 
 	List<AddressResponseDto> findAll (Long userId);
 

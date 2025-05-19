@@ -16,6 +16,7 @@ import com.example.shopingplusassignment.domain.address.dto.Request.SaveAddressR
 import com.example.shopingplusassignment.domain.address.dto.Request.UpdateAddressRequestDto;
 import com.example.shopingplusassignment.domain.address.dto.Response.AddressResponseDto;
 import com.example.shopingplusassignment.domain.address.dto.Response.DetailAddressResponseDto;
+import com.example.shopingplusassignment.domain.address.dto.Response.SaveAddressResponseDto;
 import com.example.shopingplusassignment.domain.address.service.AddressServiceImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class AddressController {
 	private final AddressServiceImpl addressService;
 
 	@PostMapping
-	public ResponseEntity<DetailAddressResponseDto> saveAddress (
+	public ResponseEntity<SaveAddressResponseDto> saveAddress (
 		@RequestBody SaveAddressRequestDto requestDto
 
 	) {
