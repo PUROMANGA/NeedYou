@@ -10,12 +10,11 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Table (name = "address")
-public class AddressEntity {
+public class Address {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,7 +34,7 @@ public class AddressEntity {
 	private String recipient;
 
 	@Column (nullable = false)
-	private Long recipientNumber;
+	private String recipientNumber;
 
 	private String deliveryDescription;
 
