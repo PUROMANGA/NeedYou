@@ -12,4 +12,5 @@ public class CommentRequestDto {
 	String description;
 
 	int rating;
+
 }
