@@ -1,5 +1,6 @@
 package com.example.shopingplusassignment.domain.comment.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
@@ -28,31 +29,45 @@ public class CommentServiceImpl implements CommentService {
 	public CommentResponseDto saveComment(Long orderId, Long userId, CommentRequestDto dto) {
 
 		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("주문이 존재하지 않습니다."));
-		if (order.getUser().getId().equal(userId)) {
-			new RuntimeException("주문자와 일치하지 않습니다.");
+		if (!order.getUser().getId().equals(userId)) {
+			throw new RuntimeException("주문자와 일치하지 않습니다.");
 		}
-		Comment getComment = new Comment(dto, order);
-		Comment saveComment = commentRepository.save(getComment);
+		Comment Comment = new Comment(dto, order);
+
+		Comment saveComment = commentRepository.save(Comment);
+
 		return new CommentResponseDto(saveComment);
 	}
 
-	@Transactional
+	@Transactional(readOnly = true)
 	@Override
 	public List<CommentResponseDto> getCommentByRating(int minRating, int maxRating, int page, int size) {
 
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-		Page<Comment> comments = commentRepository.findCommentByRatingBetween(minRating, maxRating, pageRequest);
+
+		Page<Comment> comments = commentRepository.findCommentByRatingBetweenAndDeletedAtIsNull(minRating, maxRating, pageRequest);
+
 		return comments.stream().map(CommentResponseDto::new).toList();
 	}
 
 	@Transactional
 	@Override
 	public CommentMessageResponseDto deleteComment(Long orderId, Long userId, Long reviewId) {
-		Order order = orderRepository.findById(orderId).ElseOrThrow(() -> new RuntimeException("주문이 존재하지 않습니다."));
-		if (order.getUser().getId().equal(userId)) {
-			new RuntimeException("주문자와 일치하지 않습니다.");
+		Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("주문이 존재하지 않습니다."));
+		if (!order.getUser().getId().equals(userId)) {
+			throw new RuntimeException("주문자와 일치하지 않습니다.");
 		}
-		Comment getComment = commentRepository.findById(reviewId).orElseThrow(()-> new RuntimeException("리뷰가 존재하지 않습니다."));
+
+
+		Comment getComment = commentRepository.findByIdAndDeletedAtIsNull(reviewId)
+			.orElseThrow(()-> new RuntimeException("리뷰가 존재하지 않습니다."));
+
+		if (!getComment.getUser().getId().equals(userId)) {
+			throw new RuntimeException("본인이 작성한 댓글만 삭제할 수 있습니다.");
+		}
+
+		getComment.markAsDeleted(true, LocalDateTime.now());
+
 		return new CommentMessageResponseDto("정상처리", "정상적으로 삭제 되었습니다.");
 	}
 }
