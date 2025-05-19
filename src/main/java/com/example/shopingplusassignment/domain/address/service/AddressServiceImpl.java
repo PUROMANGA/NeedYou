@@ -15,6 +15,8 @@ import com.example.shopingplusassignment.domain.address.repository.AddressReposi
 import com.example.shopingplusassignment.domain.user.entity.User;
 import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 
+import error.CustomRuntimeException;
+import error.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -29,17 +31,19 @@ public class AddressServiceImpl implements AddressService {
 
 		// 로그인 유저 찾기
 		User user = userRepository.findById(userId)
-			.orElseThrow(()->new RuntimeException(""));
+			.orElseThrow(()->new RuntimeException("사용자를 찾을 수 없습니다."));
 
 		// 유저당 최대 10개까지 배송지 정보 등록 가능
 		long countAddress = addressRepository.countByUser_Id(userId);
 		if(countAddress >= 10) {
-			throw new RuntimeException("");
+			throw new CustomRuntimeException(ExceptionCode.ADDRESS_LIMIT_OVER);
 		}
 
 		// 기본 배송지 1개 이상 설정 불가능
-		if(addressRepository.existsDefaultAddress(userId)) {
-			throw new RuntimeException("");
+		if(dto.getIsDefaultAddress() != null && dto.getIsDefaultAddress()) {
+			if (addressRepository.existsDefaultAddress(userId)) {
+				throw new CustomRuntimeException(ExceptionCode.DEFAULT_ALREADY_EXISTS);
+			}
 		}
 
 		// 기본 배송지 1개는 무조건 있어야함
@@ -82,7 +86,7 @@ public class AddressServiceImpl implements AddressService {
 	public DetailAddressResponseDto findOne(Long addressId, Long userId) {
 
 		Address address = addressRepository.findByIdAndUser_Id(addressId, userId)
-			.orElseThrow(()->new RuntimeException(""));
+			.orElseThrow(()->new CustomRuntimeException(ExceptionCode.ADDRESS_NOT_FOUND));
 
 		return DetailAddressResponseDto.toDto(address);
 	}
@@ -90,8 +94,11 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public DetailAddressResponseDto findDefaultOne(Long userId) {
 
-		Address address = addressRepository.findDefaultAddress(userId)
-			.orElseThrow(()->new RuntimeException(""));
+		Address address = addressRepository.findDefaultAddress(userId);
+
+		if(address == null) {
+			throw new CustomRuntimeException(ExceptionCode.NO_DEFAULT_ADDRESS);
+		}
 
 		return DetailAddressResponseDto.toDto(address);
 	}
@@ -101,12 +108,15 @@ public class AddressServiceImpl implements AddressService {
 	public DetailAddressResponseDto update(Long addressId, UpdateAddressRequestDto dto, Long userId) {
 
 		Address address = addressRepository.findByIdAndUser_Id(addressId, userId)
-			.orElseThrow(()->new RuntimeException(""));
+			.orElseThrow(()->new CustomRuntimeException(ExceptionCode.ADDRESS_NOT_FOUND));
 
 		// 기본 배송지 수정시 기존 기본 배송지 해제 처리
-		Address lastDefaultAddress = addressRepository.findDefaultAddress(userId)
-				.orElseThrow(()-> new RuntimeException(""));
-		lastDefaultAddress.setIsDefaultAddress(false);
+		if (dto.getIsDefaultAddress() != null && dto.getIsDefaultAddress()) {
+			Address lastDefaultAddress = addressRepository.findDefaultAddress(userId);
+			if (!lastDefaultAddress.equals(address)) {
+				lastDefaultAddress.setIsDefaultAddress(false);
+			}
+		}
 
 		address.update(dto);
 
@@ -117,7 +127,8 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public void delete(Long addressId, Long userId) {
 
-		Address address = addressRepository.findByIdAndUser_Id(addressId, userId).orElseThrow(()->new RuntimeException(""));
+		Address address = addressRepository.findByIdAndUser_Id(addressId, userId)
+			.orElseThrow(()->new CustomRuntimeException(ExceptionCode.ADDRESS_NOT_FOUND));
 
 		addressRepository.delete(address);
 	}
