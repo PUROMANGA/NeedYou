@@ -47,7 +47,7 @@ public class CommentServiceImpl implements CommentService {
 
 	@Transactional
 	@Override
-	public CommentMessageResponseDto delete(Long orderId, Long userId, Long reviewId) {
+	public CommentMessageResponseDto deleteComment(Long orderId, Long userId, Long reviewId) {
 		Order order = orderRepository.findById(orderId).ElseOrThrow(() -> new RuntimeException("주문이 존재하지 않습니다."));
 		if (order.getUser().getId().equal(userId)) {
 			new RuntimeException("주문자와 일치하지 않습니다.");
