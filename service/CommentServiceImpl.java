@@ -24,6 +24,13 @@ public class CommentServiceImpl implements CommentService {
 
 	private final CommentRepository commentRepository;
 
+	/**
+	 *  Comment 생성
+	 * @param orderId
+	 * @param userId
+	 * @param dto
+	 * @return commentResponse 반환
+	 */
 	@Transactional
 	@Override
 	public CommentResponseDto saveComment(Long orderId, Long userId, CommentRequestDto dto) {
@@ -39,6 +46,14 @@ public class CommentServiceImpl implements CommentService {
 		return new CommentResponseDto(saveComment);
 	}
 
+	/**
+	 *  삭제되지 않는 별점의 범위내 결과 출력하기.
+	 * @param minRating
+	 * @param maxRating
+	 * @param page
+	 * @param size
+	 * @return Page 내 응답 리스트 출력
+	 */
 	@Transactional(readOnly = true)
 	@Override
 	public List<CommentResponseDto> getCommentByRating(int minRating, int maxRating, int page, int size) {
@@ -50,6 +65,13 @@ public class CommentServiceImpl implements CommentService {
 		return comments.stream().map(CommentResponseDto::new).toList();
 	}
 
+	/**
+	 * Comment 삭제 , 삭제시 본인거인지 자동으로 확인 후 소프트 Delete 진행
+	 * @param orderId
+	 * @param userId
+	 * @param reviewId
+	 * @return 정상처리 메세지 출력
+	 */
 	@Transactional
 	@Override
 	public CommentMessageResponseDto deleteComment(Long orderId, Long userId, Long reviewId) {
