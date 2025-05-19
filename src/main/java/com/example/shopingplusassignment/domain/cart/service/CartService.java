@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class CartService {
      * @param email
      * @return
      */
-
+    @Transactional
     public CartResponseDto postCartService(CartRequestDto cartRequestDto, Long productId, String email) {
         User user = userRepositroy.findByEmail(email).oreElseThrow(()-> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
         Product product = productRepository.findById(productId).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.PRODUCT_CANT_FIND));
@@ -45,7 +46,7 @@ public class CartService {
      * @param cartRequestDto
      * @return
      */
-
+    @Transactional
     public Cart patchCartService(Long cartId, CartRequestDto cartRequestDto) {
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("카트가 없습니다."));
         cart.update(cartRequestDto);
@@ -58,7 +59,7 @@ public class CartService {
      * @param pageable
      * @return
      */
-
+    @Transactional(readOnly = true)
     public Page<CartResponseDto> getCartService(Long userId, Pageable pageable) {
         Page<CartResponseDto> cart = cartRepository.findByIdForPage(userId, pageable);
         if(cart.isEmpty()) {
@@ -72,6 +73,7 @@ public class CartService {
      * @param cartId
      * @param email
      */
+    @Transactional
     public void deleteCartService(Long cartId, String email) {
         User user = userRepositroy.findByEmail(email).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("카트가 없습니다."));
