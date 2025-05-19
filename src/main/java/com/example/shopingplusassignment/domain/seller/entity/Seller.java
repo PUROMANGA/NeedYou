@@ -35,4 +35,17 @@ public class Seller {
 
     private String customerServiceNumber; // 고객센터 전화번호
 
+    public Seller(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber) {
+        this.name = name;
+        this.ceoName = ceoName;
+        this.email = email;
+        this.businessNumber = businessNumber;
+        this.businessAddress = businessAddress;
+        this.customerServiceNumber = customerServiceNumber;
+    }
+
+    public static Seller createSeller(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber) {
+        return new Seller(name, ceoName, email, businessNumber, businessAddress, customerServiceNumber);
+    }
+
 }
