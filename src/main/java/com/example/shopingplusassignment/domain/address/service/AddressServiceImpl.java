@@ -62,7 +62,16 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public DetailAddressResponseDto update(Long addressId, UpdateAddressRequestDto dto, Long userId) {
 
-		Address address = addressRepository.findByIdAndUser_Id(addressId, userId).orElseThrow(()->new RuntimeException(""));
+		Address address = addressRepository.findByIdAndUser_Id(addressId, userId)
+			.orElseThrow(()->new RuntimeException(""));
+
+		List<Address> addressList = addressRepository.findAllByUser_Id(userId);
+
+		if(dto.getIsDefaultAddress() != null && dto.getIsDefaultAddress()) {
+			for (Address address1 : addressList) {
+				address1.setIsDefaultAddress(false);
+			}
+		}
 
 		address.update(dto);
 
