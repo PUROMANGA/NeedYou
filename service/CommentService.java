@@ -8,6 +8,6 @@ import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
 
 public interface CommentService {
        CommentResponseDto saveComment(Long orderId, Long userId, CommentRequestDto dto);
-	   List<CommentResponseDto> getCommentByRating(Long minRating, Long maxRating , Long page, Long size);
+	   List<CommentResponseDto> getCommentByRating(int minRating, int maxRating , int page, int size);
 	   CommentMessageResponseDto delete(Long orderId, Long userId);
 }
