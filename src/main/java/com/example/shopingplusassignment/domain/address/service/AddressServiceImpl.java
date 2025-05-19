@@ -143,7 +143,9 @@ public class AddressServiceImpl implements AddressService {
 	 * 배송지 수정 요청 서비스
 	 * 제약사항:
 	 * 1. 유저 본인의 배송지만 수정할 수 있습니다.
-	 * 2. 기본 배송지로 수정할 경우 기존 기본 배송지는 해제됩니다.
+	 * 2. 기본 배송지를 새로 설정(수정)할 경우 기존 기본 배송지는 해제됩니다.
+	 * 3. 기본 배송지를 false로 변경하는 것은 허용되지 않습니다.
+	 *    → 다른 배송지를 기본으로 설정하면 기존 기본 배송지가 자동 해제됩니다.
 	 *
 	 * @param addressId 배송지 정보 식별자
 	 * @param dto 배송지 수정 요청 정보가 담긴 {@link UpdateAddressRequestDto} 객체
@@ -157,13 +159,19 @@ public class AddressServiceImpl implements AddressService {
 		Address address = addressRepository.findByIdAndUser_Id(addressId, userId)
 			.orElseThrow(()->new CustomRuntimeException(ExceptionCode.ADDRESS_NOT_FOUND));
 
-		// 기본 배송지 수정시 기존 기본 배송지 해제 처리
+		// 요청의 배송지를 기본 배송지로 수정하려는 경우 -> 기존 기본 배송지 해제 처리
 		if (dto.getIsDefaultAddress() != null && dto.getIsDefaultAddress()) {
 			Address lastDefaultAddress = addressRepository.findDefaultAddress(userId);
 			if (!lastDefaultAddress.equals(address)) {
 				lastDefaultAddress.setIsDefaultAddress(false);
 			}
 		}
+
+		// 기본 배송지를 해제하려는 경우 -> 기본 배송지가 없어지므로 수정 불가
+		if (address.getIsDefaultAddress() && dto.getIsDefaultAddress() != null && !dto.getIsDefaultAddress()) {
+			throw new CustomRuntimeException(ExceptionCode.CANNOT_UNSET_DEFAULT_ADDRESS);
+		}
+
 
 		address.update(dto);
 
@@ -173,7 +181,8 @@ public class AddressServiceImpl implements AddressService {
 	/**
 	 * 배송지 삭제 요청 서비스
 	 * 제약사항:
-	 * 유저 본인의 배송지만 삭제할 수 있습니다.
+	 * 1. 유저 본인의 배송지만 삭제할 수 있습니다.
+	 * 2. 기본 배송지는 삭제할 수 없습니다.
 	 *
 	 * @param addressId 배송지 정보 식별자
 	 * @param userId 현재 로그인 유저 식별자
@@ -184,6 +193,10 @@ public class AddressServiceImpl implements AddressService {
 
 		Address address = addressRepository.findByIdAndUser_Id(addressId, userId)
 			.orElseThrow(()->new CustomRuntimeException(ExceptionCode.ADDRESS_NOT_FOUND));
+
+		if (address.getIsDefaultAddress()) {
+			throw new CustomRuntimeException(ExceptionCode.CANNOT_DELETE_DEFAULT_ADDRESS);
+		}
 
 		addressRepository.delete(address);
 	}

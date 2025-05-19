@@ -20,7 +20,10 @@ public enum ExceptionCode implements ErrorCode {
     ADDRESS_LIMIT_OVER(HttpStatus.BAD_REQUEST, "배송지 정보는 최대 10개까지 등록할 수 있습니다"),
     DEFAULT_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "기본 배송지는 한 개만 설정할 수 있습니다"),
     UNAUTHORIZED_ADDRESS_ACCESS(HttpStatus.FORBIDDEN, "해당 배송지 정보에 대한 권한이 없습니다"),
-    NO_DEFAULT_ADDRESS(HttpStatus.BAD_REQUEST, "기본 배송지가 존재하지 않습니다");
+    NO_DEFAULT_ADDRESS(HttpStatus.BAD_REQUEST, "기본 배송지가 존재하지 않습니다"),
+    CANNOT_DELETE_DEFAULT_ADDRESS(HttpStatus.BAD_REQUEST, "기본 배송지는 삭제할 수 없습니다."),
+    CANNOT_UNSET_DEFAULT_ADDRESS(HttpStatus.BAD_REQUEST, "기본 배송지는 해제할 수 없으며, 다른 배송지를 기본으로 설정하면 기존 기본 배송지가 해제됩니다.");
+
 
 
 
