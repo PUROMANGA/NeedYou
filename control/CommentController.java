@@ -23,7 +23,7 @@ import com.example.shopingplusassignment.domain.comment.repository.CommentReposi
 import com.example.shopingplusassignment.domain.comment.service.CommentServiceImpl;
 
 @RestController
-@RequestMapping
+@RequestMapping("orders/{orderId}/reviews")
 @RequiredArgsConstructor
 public class CommentController {
 	private final CommentServiceImpl commentService;
@@ -44,11 +44,10 @@ public class CommentController {
 		@RequestParam(defaultValue = "1") int page,
 		@RequestParam(defaultValue = "10") int size
 	) {
-
 		return new ResponseEntity<>(commentService.getCommentByRating(min, max, page, size), HttpStatus.NO_CONTENT);
 	}
 
-	@DeleteMapping
+	@DeleteMapping("/{reviewId}")
 	public ResponseEntity<CommentMessageResponseDto> DeleteComment(
 		@PathVariable Long orderId,
 		@PathVariable Long reviewId,
