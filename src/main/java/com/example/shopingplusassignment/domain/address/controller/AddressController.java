@@ -2,7 +2,10 @@ package com.example.shopingplusassignment.domain.address.controller;
 
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -18,6 +21,7 @@ import com.example.shopingplusassignment.domain.address.dto.Response.AddressResp
 import com.example.shopingplusassignment.domain.address.dto.Response.DetailAddressResponseDto;
 import com.example.shopingplusassignment.domain.address.dto.Response.SaveAddressResponseDto;
 import com.example.shopingplusassignment.domain.address.service.AddressServiceImpl;
+import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 
 import lombok.RequiredArgsConstructor;
 
@@ -30,48 +34,54 @@ public class AddressController {
 
 	@PostMapping
 	public ResponseEntity<SaveAddressResponseDto> saveAddress (
-		@RequestBody SaveAddressRequestDto requestDto
-
+		@RequestBody SaveAddressRequestDto requestDto,
+		@AuthenticationPrincipal AuthUser authUser
 	) {
-		return new ResponseEntity<>(addressService.save(requestDto,userId));
+		Long userId = authUser.getUser().getId();
+		return new ResponseEntity<>(addressService.save(requestDto,userId), HttpStatus.OK);
 	}
 
 	@GetMapping
-	public List<ResponseEntity<AddressResponseDto>> findAllAddress (
-
+	public ResponseEntity<List<AddressResponseDto>> findAllAddress (
+		@AuthenticationPrincipal AuthUser authUser
 	) {
-		return new ResponseEntity<>(addressService.findAll(userId));
+		Long userId = authUser.getUser().getId();
+		return new ResponseEntity<>(addressService.findAll(userId), HttpStatus.OK);
 	}
 
 	@GetMapping("/{addressId}")
 	public ResponseEntity<DetailAddressResponseDto> findOneAddress (
-		@PathVariable Long addressId
-
+		@PathVariable Long addressId,
+		@AuthenticationPrincipal AuthUser authUser
 	) {
-		return new ResponseEntity<>(addressService.findOne(addressId,userId));
+		Long userId = authUser.getUser().getId();
+		return new ResponseEntity<>(addressService.findOne(addressId,userId), HttpStatus.OK);
 	}
 
 	@GetMapping
 	public ResponseEntity<DetailAddressResponseDto> findDefaultAddress (
-
+		@AuthenticationPrincipal AuthUser authUser
 	) {
-		return new ResponseEntity<>(addressService.findDefaultOne(userId));
+		Long userId = authUser.getUser().getId();
+		return new ResponseEntity<>(addressService.findDefaultOne(userId), HttpStatus.OK);
 	}
 
 	@PatchMapping("/{addressId}")
 	public ResponseEntity<DetailAddressResponseDto> updateAddress (
 		@PathVariable Long addressId,
-		@RequestBody UpdateAddressRequestDto resquestDto
-
+		@RequestBody UpdateAddressRequestDto resquestDto,
+		@AuthenticationPrincipal AuthUser authUser
 	) {
-		return new ResponseEntity<>(addressService.update(addressId,resquestDto, userId));
+		Long userId = authUser.getUser().getId();
+		return new ResponseEntity<>(addressService.update(addressId,resquestDto, userId), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{addressId}")
 	public ResponseEntity<String> deleteAddress (
-		@PathVariable Long addressId
-
+		@PathVariable Long addressId,
+		@AuthenticationPrincipal AuthUser authUser
 	) {
+		Long userId = authUser.getUser().getId();
 		addressService.delete(addressId, userId);
 		return ResponseEntity.ok("배송정보가 삭제되었습니다");
 	}

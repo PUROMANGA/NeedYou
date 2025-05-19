@@ -12,6 +12,8 @@ import com.example.shopingplusassignment.domain.address.dto.Response.DetailAddre
 import com.example.shopingplusassignment.domain.address.dto.Response.SaveAddressResponseDto;
 import com.example.shopingplusassignment.domain.address.entity.Address;
 import com.example.shopingplusassignment.domain.address.repository.AddressRepository;
+import com.example.shopingplusassignment.domain.user.entity.User;
+import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,9 +22,14 @@ import lombok.RequiredArgsConstructor;
 public class AddressServiceImpl implements AddressService {
 
 	private final AddressRepository addressRepository;
+	private final UserRepository userRepository;
 
 	@Override
 	public SaveAddressResponseDto save(SaveAddressRequestDto dto, Long userId) {
+
+		// 로그인 유저 찾기
+		User user = userRepository.findById(userId)
+			.orElseThrow(()->new RuntimeException(""));
 
 		// 유저당 최대 10개까지 배송지 정보 등록 가능
 		long countAddress = addressRepository.countByUser_Id(userId);
