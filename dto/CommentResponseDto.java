@@ -7,8 +7,11 @@ import com.example.shopingplusassignment.domain.comment.entity.Comment;
 @Getter
 public class CommentResponseDto {
 	Long Id;
+
 	String title;
+
 	String description;
+
 	int rating;
 
 	public CommentResponseDto(Comment comment) {

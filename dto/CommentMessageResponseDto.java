@@ -5,6 +5,7 @@ import lombok.Getter;
 @Getter
 public class CommentMessageResponseDto {
 	String State;
+
 	String Message;
 
 	public CommentMessageResponseDto(String state, String message) {
