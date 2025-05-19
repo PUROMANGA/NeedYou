@@ -17,6 +17,8 @@ public interface AddressService {
 
 	DetailAddressResponseDto findOne(Long addressId, Long userId);
 
+	DetailAddressResponseDto findDefaultOne(Long userId);
+
 	DetailAddressResponseDto update(Long addressId, UpdateAddressRequestDto requestDto, Long userId);
 
 	void delete(Long addressId, Long userId);

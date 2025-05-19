@@ -33,6 +33,25 @@ public class AddressServiceImpl implements AddressService {
 			dto.getIsDefaultAddress()
 		);
 
+		// 유저당 최대 10개까지 배송지 정보 등록 가능
+		long countAddress = addressRepository.countByUser_Id(userId);
+		if(countAddress >= 10) {
+			throw new RuntimeException("");
+		}
+
+		// 기본 배송지 1개 이상 설정 불가능
+		if(addressRepository.existsDefaultAddress(userId)) {
+			throw new RuntimeException("");
+		}
+
+		// 기본 배송지 1개는 무조건 있어야함
+		if(!addressRepository.existsDefaultAddress(userId)) {
+			if(!dto.getIsDefaultAddress()) {
+				dto.setIsDefaultAddress(true);
+				message = "기본 배송지가 없어 해당 주소를 기본 배송지로 설정합니다.";
+			}
+		}
+
 		addressRepository.save(address);
 
 		return DetailAddressResponseDto.toDto(address);
@@ -53,7 +72,17 @@ public class AddressServiceImpl implements AddressService {
 	@Override
 	public DetailAddressResponseDto findOne(Long addressId, Long userId) {
 
-		Address address = addressRepository.findByIdAndUser_Id(addressId, userId).orElseThrow(()->new RuntimeException(""));
+		Address address = addressRepository.findByIdAndUser_Id(addressId, userId)
+			.orElseThrow(()->new RuntimeException(""));
+
+		return DetailAddressResponseDto.toDto(address);
+	}
+
+	@Override
+	public DetailAddressResponseDto findDefaultOne(Long userId) {
+
+		Address address = addressRepository.findDefaultAddress(userId)
+			.orElseThrow(()->new RuntimeException(""));
 
 		return DetailAddressResponseDto.toDto(address);
 	}
@@ -65,13 +94,10 @@ public class AddressServiceImpl implements AddressService {
 		Address address = addressRepository.findByIdAndUser_Id(addressId, userId)
 			.orElseThrow(()->new RuntimeException(""));
 
-		List<Address> addressList = addressRepository.findAllByUser_Id(userId);
-
-		if(dto.getIsDefaultAddress() != null && dto.getIsDefaultAddress()) {
-			for (Address address1 : addressList) {
-				address1.setIsDefaultAddress(false);
-			}
-		}
+		// 기본 배송지 수정시 기존 기본 배송지 해제 처리
+		Address lastDefaultAddress = addressRepository.findDefaultAddress(userId)
+				.orElseThrow(()-> new RuntimeException(""));
+		lastDefaultAddress.setIsDefaultAddress(false);
 
 		address.update(dto);
 
