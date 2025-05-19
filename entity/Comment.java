@@ -2,6 +2,8 @@ package com.example.shopingplusassignment.domain.comment.entity;
 
 import base_entity.BaseEntity;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,6 +44,9 @@ public class Comment extends BaseEntity {
 	@Column(nullable = false)
 	int rating;
 
+	boolean isDelete;
+	LocalDateTime deletedAt;
+
 	public Comment(){
 
 	}
@@ -57,6 +62,11 @@ public class Comment extends BaseEntity {
 		this.rating = dto.getRating();
 		this.user = order.getUser();
 		this.product = order.getProduct();
+	}
+
+	public void markAsDeleted(boolean isDelete, LocalDateTime now){
+		this.isDelete = isDelete;
+		this.deletedAt = now;
 	}
 
 }
