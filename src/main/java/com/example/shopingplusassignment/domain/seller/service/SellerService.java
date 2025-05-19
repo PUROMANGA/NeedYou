@@ -1,12 +1,18 @@
 package com.example.shopingplusassignment.domain.seller.service;
 
 import com.example.shopingplusassignment.domain.seller.dto.request.StoreCreateRequestDto;
+import com.example.shopingplusassignment.domain.seller.dto.request.updateSellerRequestDto;
 import com.example.shopingplusassignment.domain.seller.dto.response.SellerResponseDto;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
-import jakarta.validation.Valid;
+import error.CustomRuntimeException;
+import error.ExceptionCode;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -14,9 +20,9 @@ public class SellerService {
 
     private final SellerRepository sellerRepository;
 
-    public SellerResponseDto createSeller(StoreCreateRequestDto requestDto) {
+    // todo 접근 권한, 로그인 여부 추가
 
-        // + 접근 권한 예외 추가하기
+    public SellerResponseDto createSeller(StoreCreateRequestDto requestDto) {
 
         Seller seller = Seller.createSeller(
                 requestDto.getCompanyName(),
@@ -30,6 +36,41 @@ public class SellerService {
         Seller saved = sellerRepository.save(seller);
         
         return SellerResponseDto.of(saved);
+    }
+
+    public SellerResponseDto getSeller(Long sellerId) {
+
+        Seller seller = sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
+
+        return SellerResponseDto.of(seller);
+    }
+
+    @Transactional
+    public SellerResponseDto updateSeller(Long sellerId, updateSellerRequestDto updateSellerRequestDto) {
+
+        Seller seller = sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
+
+        seller.update(
+                updateSellerRequestDto.getCompanyName(),
+                updateSellerRequestDto.getCeoName(),
+                updateSellerRequestDto.getEmail(),
+                updateSellerRequestDto.getBusinessNumber(),
+                updateSellerRequestDto.getBusinessAddress(),
+                updateSellerRequestDto.getCsNumber()
+                );
+
+        return SellerResponseDto.of(seller);
+    }
+
+    @Transactional
+    public void deleteSeller(Long sellerId) {
+
+        Seller seller = sellerRepository.findById(sellerId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
+
+        sellerRepository.delete(seller);
     }
 
 }

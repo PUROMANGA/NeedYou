@@ -1,5 +1,6 @@
 package com.example.shopingplusassignment.domain.seller.entity;
 
+import base_entity.BaseEntity;
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -46,6 +47,15 @@ public class Seller {
 
     public static Seller createSeller(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber) {
         return new Seller(name, ceoName, email, businessNumber, businessAddress, customerServiceNumber);
+    }
+
+    public void update(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber) {
+        this.name = name;
+        this.ceoName = ceoName;
+        this.email = email;
+        this.businessNumber = businessNumber;
+        this.businessAddress = businessAddress;
+        this.customerServiceNumber = customerServiceNumber;
     }
 
 }

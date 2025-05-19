@@ -1,12 +1,15 @@
 package com.example.shopingplusassignment.domain.seller.dto.response;
 
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
 public class SellerResponseDto {
+
+    private final Long id;
 
     private final String companyName;
 
@@ -23,6 +26,7 @@ public class SellerResponseDto {
     // sellerResponse용 팩토리 메서드
     public static SellerResponseDto of(Seller seller) {
         return new SellerResponseDto(
+                seller.getId(),
                 seller.getName(),
                 seller.getCeoName(),
                 seller.getEmail(),

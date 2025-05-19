@@ -1,16 +1,15 @@
 package com.example.shopingplusassignment.domain.seller.controller;
 
 import com.example.shopingplusassignment.domain.seller.dto.request.StoreCreateRequestDto;
+import com.example.shopingplusassignment.domain.seller.dto.request.updateSellerRequestDto;
 import com.example.shopingplusassignment.domain.seller.dto.response.SellerResponseDto;
+import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.service.SellerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/sellers")
@@ -19,7 +18,8 @@ public class SellerController {
 
     private final SellerService sellerService;
 
-    @PostMapping // 추후 jwt, 예외처리 필
+    // 판매자 정보 등록
+    @PostMapping // 추후 jwt 적용
     public ResponseEntity<SellerResponseDto> createSeller(
             @Valid @RequestBody StoreCreateRequestDto requestDto
     ) {
@@ -27,5 +27,32 @@ public class SellerController {
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.CREATED);
     }
 
+    // 판매자 정보 조회
+    @GetMapping("/{sellerId}")
+    public ResponseEntity<SellerResponseDto> getSeller(
+            @PathVariable Long sellerId
+    ) {
+        SellerResponseDto sellerResponseDto = sellerService.getSeller(sellerId);
+        return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
+    }
+
+    // 판매자 정보 수정
+    @PutMapping("/{sellerId}")
+    public ResponseEntity<SellerResponseDto> updateSeller(
+            @PathVariable Long sellerId,
+            @Valid @RequestBody updateSellerRequestDto updateSellerRequestDto
+    ) {
+        SellerResponseDto sellerResponseDto = sellerService.updateSeller(sellerId, updateSellerRequestDto);
+        return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
+    }
+
+    // 판매자 정보 삭제
+    @DeleteMapping("/{sellerId}")
+    public ResponseEntity<Void> deleteSeller(
+            @PathVariable Long sellerId
+    ) {
+        sellerService.deleteSeller(sellerId);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
 }
