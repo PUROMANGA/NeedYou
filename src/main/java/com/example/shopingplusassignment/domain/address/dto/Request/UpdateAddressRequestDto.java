@@ -21,5 +21,5 @@ public class UpdateAddressRequestDto {
 
 	private String deliveryDescription;
 
-	private boolean isDefaultAddress;
+	private Boolean isDefaultAddress;
 }

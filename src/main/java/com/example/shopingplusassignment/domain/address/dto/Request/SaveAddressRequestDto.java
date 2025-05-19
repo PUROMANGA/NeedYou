@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.NotBlank;
+import lombok.Setter;
 
 @Getter
 @NoArgsConstructor
@@ -26,6 +27,9 @@ public class SaveAddressRequestDto {
 
 	private String deliveryDescription;
 
-	private boolean isDefaultAddress;
+	@Setter
+	private Boolean isDefaultAddress;
+
+
 
 }

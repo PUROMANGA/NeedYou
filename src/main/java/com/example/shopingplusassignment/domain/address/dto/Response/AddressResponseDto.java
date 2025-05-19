@@ -5,8 +5,9 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class SaveAddressResponseDto {
+public class AddressResponseDto {
 
-	private String message;
-	private DetailAddressResponseDto address;
+	private Long addressId;
+	private String address;
+	private Boolean isDefaultAddress;
 }
