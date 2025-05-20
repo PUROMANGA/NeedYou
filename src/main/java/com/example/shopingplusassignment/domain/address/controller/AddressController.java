@@ -84,7 +84,7 @@ public class AddressController {
 	 * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
 	 * @return 유저의 기본 배송지 정보가 담긴 {@link DetailAddressResponseDto} 객체
 	 */
-	@GetMapping
+	@GetMapping("/default")
 	public ResponseEntity<DetailAddressResponseDto> findDefaultAddress (
 		@AuthenticationPrincipal AuthUser authUser
 	) {
