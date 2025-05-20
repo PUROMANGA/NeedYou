@@ -19,7 +19,7 @@ public class BrandResponseDto {
         return new BrandResponseDto(
                 brand.getId(),
                 brand.getName(),
-                brand.getSeller().getName()
+                brand.getSeller().getCeoName()
         );
     }
 
