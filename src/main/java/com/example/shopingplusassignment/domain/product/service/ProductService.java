@@ -1,9 +1,13 @@
 package com.example.shopingplusassignment.domain.product.service;
 
+import com.example.shopingplusassignment.domain.brand.entity.Brand;
+import com.example.shopingplusassignment.domain.brand.repository.BrandRepository;
 import com.example.shopingplusassignment.domain.product.dto.RequestProductDto;
 import com.example.shopingplusassignment.domain.product.dto.ResponseProductDto;
 import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
+import com.example.shopingplusassignment.domain.seller.entity.Seller;
+import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
 import error.CustomRuntimeException;
 import error.ExceptionCode;
 import org.springframework.data.domain.Pageable;
@@ -32,8 +36,8 @@ public class ProductService {
 
     @Transactional
     public ResponseProductDto postProductService(RequestProductDto requestProductDto, Long brandId, String email) {
-        Seller seller = sellerRepository.findByEmail(email).oreElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
-        Brand brand = brandRepository.findById(brandId).oreElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
+        Seller seller = sellerRepository.findByEmail(email);
+        Brand brand = brandRepository.findById(brandId).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
         Product product = new Product(requestProductDto, brand, seller.getId());
         return new ResponseProductDto(productRepository.save(product));
     }
@@ -48,15 +52,15 @@ public class ProductService {
      */
 
     @Transactional
-    public ResponseProductDto patchProductService(RequestProductDto requestProductDto, Long productId, String email) {
+    public ResponseProductDto patchProductService(RequestProductDto requestProductDto,Long brandId, Long productId, String email) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.PRODUCT_CANT_FIND));
-        Seller seller = sellerRepository.findByemail(email).oreElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
+        Seller seller = sellerRepository.findByEmail(email);
 
         if(!product.getSellerId().equals(seller.getId())) {
             throw new RuntimeException("등록자와 일치하지 않습니다.");
         }
 
-        if(!product.getBrand().getname().equals(requestProductDto.getBrandName())) {
+        if(!product.getBrand().getName().equals(requestProductDto.getBrandName())) {
             Brand brand = brandRepository.findByName(requestProductDto.getBrandName());
             product.update(requestProductDto, brand);
         }
@@ -72,7 +76,7 @@ public class ProductService {
     @Transactional
     public void deleteProductService(Long productId, String email) {
         Product product = productRepository.findById(productId).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.PRODUCT_CANT_FIND));
-        Seller seller = sellerRepository.findByemail(email).oreElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
+        Seller seller = sellerRepository.findByEmail(email);
         if(!product.getSellerId().equals(seller.getId())) {
             throw new RuntimeException("등록자와 일치하지 않습니다.");
         }

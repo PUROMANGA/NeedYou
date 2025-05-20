@@ -31,4 +31,10 @@ public class Cart extends BaseEntity {
     public void update(CartRequestDto cartRequestDto) {
         this.amount = cartRequestDto.getAmount();
     }
+
+    public Cart(Long productId, Long userId, CartRequestDto cartRequestDto) {
+        this.productId = productId;
+        this.userId = userId;
+        this.amount = cartRequestDto.getAmount();
+    }
 }

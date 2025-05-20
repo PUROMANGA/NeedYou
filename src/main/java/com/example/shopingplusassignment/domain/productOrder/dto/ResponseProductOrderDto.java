@@ -1,0 +1,34 @@
+package com.example.shopingplusassignment.domain.productOrder.dto;
+
+import com.example.shopingplusassignment.domain.order.entity.Order;
+import com.example.shopingplusassignment.domain.product.entity.Product;
+import com.example.shopingplusassignment.domain.productOrder.entity.ProductOrder;
+import lombok.Builder;
+import lombok.Getter;
+
+import java.time.LocalDateTime;
+
+@Getter
+
+public class ResponseProductOrderDto {
+
+    private Long id;
+    private String name;
+    private Long price;
+    private Long amount;
+    private Long totalPrice;
+    private Order order;
+    private LocalDateTime creatTime;
+    private LocalDateTime modifiedTime;
+
+    public ProductOrder toEntity() {
+        return ProductOrder.builder()
+                .id(this.id)
+                .name(this.name)
+                .price(this.price)
+                .amount(this.amount)
+                .totalPrice(this.totalPrice)
+                .order(this.order)
+                .build();
+    }
+}

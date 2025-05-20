@@ -1,5 +1,6 @@
 package com.example.shopingplusassignment.domain.product.dto;
 
+import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.product.common.ProductCategory;
 import com.example.shopingplusassignment.domain.product.entity.Product;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public class ResponseProductDto {
     private LocalDateTime modifiedTime;
 
     public ResponseProductDto(Product product) {
-        this.productId = product.getProductId();
+        this.productId = product.getId();
         this.brand = product.getBrand();
         this.sellerId = product.getSellerId();
         this.name = product.getName();

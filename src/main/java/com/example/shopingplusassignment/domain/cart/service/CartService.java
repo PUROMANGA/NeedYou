@@ -6,7 +6,8 @@ import com.example.shopingplusassignment.domain.cart.entity.Cart;
 import com.example.shopingplusassignment.domain.cart.repository.CartRepository;
 import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
-import com.example.shopingplusassignment.domain.user.repository.UserRepositroy;
+import com.example.shopingplusassignment.domain.user.entity.User;
+import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 import error.CustomRuntimeException;
 import error.ExceptionCode;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ public class CartService {
 
     private final CartRepository cartRepository;
     private final ProductRepository productRepository;
-    private final UserRepositroy userRepositroy;
+    private final UserRepository userRepository;
 
 
     /**
@@ -34,9 +35,9 @@ public class CartService {
      */
     @Transactional
     public CartResponseDto postCartService(CartRequestDto cartRequestDto, Long productId, String email) {
-        User user = userRepositroy.findByEmail(email).oreElseThrow(()-> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
+        User user = userRepository.findByEmail(email).orElseThrow(()-> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
         Product product = productRepository.findById(productId).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.PRODUCT_CANT_FIND));
-        Cart cart = cartRepository.save(productId, user.getId(), cartRequestDto);
+        Cart cart = cartRepository.save(new Cart(productId, user.getId(), cartRequestDto));
         return new CartResponseDto(cart, product);
     }
 
@@ -75,9 +76,9 @@ public class CartService {
      */
     @Transactional
     public void deleteCartService(Long cartId, String email) {
-        User user = userRepositroy.findByEmail(email).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
         Cart cart = cartRepository.findById(cartId).orElseThrow(() -> new RuntimeException("카트가 없습니다."));
-        if(!cart.getUserId().equals(user.getUserId())) {
+        if(!cart.getUserId().equals(user.getId())) {
             throw new RuntimeException("등록자와 일치하지 않습니다");
         }
         cartRepository.delete(cart);

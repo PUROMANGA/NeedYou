@@ -5,6 +5,10 @@ import com.example.shopingplusassignment.domain.cart.dto.CartRequestDto;
 import com.example.shopingplusassignment.domain.cart.dto.CartResponseDto;
 import com.example.shopingplusassignment.domain.cart.entity.Cart;
 import com.example.shopingplusassignment.domain.cart.service.CartService;
+import com.example.shopingplusassignment.domain.user.entity.User;
+import com.example.shopingplusassignment.domain.user.repository.UserRepository;
+import error.CustomRuntimeException;
+import error.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +27,7 @@ import static org.springframework.data.domain.Sort.Direction.DESC;
 public class CartController {
 
     private final CartService cartService;
+    private final UserRepository userRepository;
 
     /**
      * requestDto로 amount, productId와 userDetail에서 각각의 정보를 받아 db에 저장합니다.
@@ -32,12 +37,12 @@ public class CartController {
      * @return
      */
 
-    @PostMapping("products/{productId}")
+    @PostMapping("/products/{productId}")
     public ResponseEntity<CartResponseDto> postCartController(
             @RequestBody @Validated CartRequestDto cartRequestDto,
             @PathVariable Long productId,
-            @AuthenticationPrincipal UserDeatil userDeatil) {
-        CartResponseDto cartResponseDto = cartService.postCartService(cartRequestDto, productId, userDeatil.getUsername());
+            @AuthenticationPrincipal User userDetail) {
+        CartResponseDto cartResponseDto = cartService.postCartService(cartRequestDto, productId, userDetail.getEmail());
         return ResponseEntity.ok(cartResponseDto);
     }
 
@@ -65,9 +70,10 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<Page<CartResponseDto>> getCartController(
-            @AuthenticationPrincipal UserDetail userDetail,
+            @AuthenticationPrincipal User userDetail,
             @PageableDefault(size = 10, sort = "creatTime", direction = DESC) Pageable pageable) {
-        return ResponseEntity.ok(cartService.getCartService(userDetail.getUserId(), pageable));
+        User user = userRepository.findByEmail(userDetail.getEmail()).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
+        return ResponseEntity.ok(cartService.getCartService(user.getId(), pageable));
     }
 
     /**
@@ -79,8 +85,8 @@ public class CartController {
     @DeleteMapping("/{cartId}")
     public ResponseEntity<String> deleteCartController(
             @PathVariable Long cartId,
-            @AuthenticationPrincipal UserDetail userDetail) {
-        cartService.deleteCartService(cartId, userDetail.getUserName());
+            @AuthenticationPrincipal User userDetail) {
+        cartService.deleteCartService(cartId, userDetail.getEmail());
         return ResponseEntity.ok("장바구니 삭제가 완료되었습니다.");
     }
 }
