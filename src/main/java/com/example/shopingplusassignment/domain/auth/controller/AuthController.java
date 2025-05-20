@@ -2,6 +2,7 @@ package com.example.shopingplusassignment.domain.auth.controller;
 
 import com.example.shopingplusassignment.domain.auth.dto.request.LoginRequestDto;
 import com.example.shopingplusassignment.domain.auth.dto.request.SignupRequestDto;
+import com.example.shopingplusassignment.domain.auth.dto.response.LoginResponseDto;
 import com.example.shopingplusassignment.domain.auth.dto.response.SignupResponseDto;
 import com.example.shopingplusassignment.domain.auth.service.AuthService;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginRequestDto> login(@RequestBody LoginRequestDto requestDto) {
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequestDto requestDto) {
         return ResponseEntity.ok(authService.login(requestDto));
     }
 }
