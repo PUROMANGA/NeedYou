@@ -70,4 +70,19 @@ public class BrandService {
 
     }
 
+    @Transactional
+    public void deleteBrand(Long brandId, User user) {
+
+        if (user.getUserRole() != UserRole.SELLER) {
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);
+        }
+
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
+
+        brandRepository.delete(brand);
+
+
+    }
+
 }

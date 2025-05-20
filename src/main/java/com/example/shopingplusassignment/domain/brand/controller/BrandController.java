@@ -47,4 +47,13 @@ public class BrandController {
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 
+    @DeleteMapping("/{brandId}")
+    public ResponseEntity<Void> deleteBrand(
+            @PathVariable Long brandId,
+            @AuthenticationPrincipal AuthUser authUser
+    ) {
+        brandService.deleteBrand(brandId, authUser.getUser());
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 }
