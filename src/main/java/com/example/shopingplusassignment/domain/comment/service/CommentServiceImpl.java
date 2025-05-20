@@ -23,7 +23,7 @@ import com.example.shopingplusassignment.domain.product.repository.ProductReposi
 public class CommentServiceImpl implements CommentService {
 
 	private final CommentRepository commentRepository;
-
+    private final OrderRepository orderRepository;
 	/**
 	 *  Comment 생성
 	 * @param orderId
