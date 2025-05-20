@@ -34,7 +34,7 @@ public class SellerController {
     public ResponseEntity<SellerResponseDto> getSeller(
             @PathVariable Long sellerId,
             @AuthenticationPrincipal AuthUser authUser
-    ) {
+    ) { 
         SellerResponseDto sellerResponseDto = sellerService.getSeller(sellerId, authUser.getUser());
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
     }
