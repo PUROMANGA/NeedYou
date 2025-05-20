@@ -56,7 +56,7 @@ public class SellerController {
             @PathVariable Long sellerId,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        sellerService.deleteSeller(sellerId);
+        sellerService.deleteSeller(sellerId, authUser.getUser());
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

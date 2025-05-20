@@ -81,7 +81,11 @@ public class SellerService {
     }
 
     @Transactional
-    public void deleteSeller(Long sellerId) {
+    public void deleteSeller(Long sellerId, User user) {
+
+        if (user.getUserRole() != UserRole.SELLER) {
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
+        }
 
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
