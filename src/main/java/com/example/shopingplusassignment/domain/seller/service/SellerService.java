@@ -46,7 +46,11 @@ public class SellerService {
         return SellerResponseDto.of(saved);
     }
 
-    public SellerResponseDto getSeller(Long sellerId) {
+    public SellerResponseDto getSeller(Long sellerId, User user) {
+
+        if (user.getUserRole() != UserRole.SELLER) {
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
+        }
 
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));

@@ -20,7 +20,7 @@ public class SellerController {
     private final SellerService sellerService;
 
     // 판매자 정보 등록
-    @PostMapping // 추후 jwt 적용
+    @PostMapping
     public ResponseEntity<SellerResponseDto> createSeller(
             @Valid @RequestBody StoreCreateRequestDto requestDto,
             @AuthenticationPrincipal AuthUser authUser
@@ -32,9 +32,10 @@ public class SellerController {
     // 판매자 정보 조회
     @GetMapping("/{sellerId}")
     public ResponseEntity<SellerResponseDto> getSeller(
-            @PathVariable Long sellerId
+            @PathVariable Long sellerId,
+            @AuthenticationPrincipal AuthUser authUser
     ) {
-        SellerResponseDto sellerResponseDto = sellerService.getSeller(sellerId);
+        SellerResponseDto sellerResponseDto = sellerService.getSeller(sellerId, authUser.getUser());
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
     }
 
@@ -42,7 +43,8 @@ public class SellerController {
     @PutMapping("/{sellerId}")
     public ResponseEntity<SellerResponseDto> updateSeller(
             @PathVariable Long sellerId,
-            @Valid @RequestBody updateSellerRequestDto updateSellerRequestDto
+            @Valid @RequestBody updateSellerRequestDto updateSellerRequestDto,
+            @AuthenticationPrincipal AuthUser authUser
     ) {
         SellerResponseDto sellerResponseDto = sellerService.updateSeller(sellerId, updateSellerRequestDto);
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
@@ -51,7 +53,8 @@ public class SellerController {
     // 판매자 정보 삭제
     @DeleteMapping("/{sellerId}")
     public ResponseEntity<Void> deleteSeller(
-            @PathVariable Long sellerId
+            @PathVariable Long sellerId,
+            @AuthenticationPrincipal AuthUser authUser
     ) {
         sellerService.deleteSeller(sellerId);
         return new ResponseEntity<>(HttpStatus.OK);
