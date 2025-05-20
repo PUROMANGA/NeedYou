@@ -26,7 +26,10 @@ public enum ExceptionCode implements ErrorCode {
     CANNOT_UNSET_DEFAULT_ADDRESS(HttpStatus.BAD_REQUEST, "기본 배송지는 해제할 수 없으며, 다른 배송지를 기본으로 설정하면 기존 기본 배송지가 해제됩니다."),
 
     // 판매자 정보
-    UNAUTHORIZED_SELLER_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+    UNAUTHORIZED_SELLER_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+
+    // 브랜드
+    UNAUTHORIZED_BRAND_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
 
 
     private final HttpStatus httpStatus;

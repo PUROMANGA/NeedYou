@@ -28,4 +28,13 @@ public class BrandController {
         return new ResponseEntity<>(brandResponseDto, HttpStatus.CREATED);
     }
 
+    @GetMapping("/{brandId}")
+    private ResponseEntity<BrandResponseDto> getBrand(
+            @PathVariable Long brandId,
+            @AuthenticationPrincipal AuthUser authUser
+    ) {
+        BrandResponseDto brandResponseDto = brandService.getBrand(brandId, authUser.getUser());
+        return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
+    }
+
 }
