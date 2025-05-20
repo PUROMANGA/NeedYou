@@ -1,10 +1,9 @@
-package com.example.shopingplusassignment.domain.comment.control;
+package com.example.shopingplusassignment.domain.comment.controller;
 
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,7 +22,7 @@ import com.example.shopingplusassignment.domain.comment.repository.CommentReposi
 import com.example.shopingplusassignment.domain.comment.service.CommentServiceImpl;
 
 @RestController
-@RequestMapping("orders/{orderId}/reviews")
+@RequestMapping("/reviews")
 @RequiredArgsConstructor
 public class CommentController {
 	private final CommentServiceImpl commentService;
@@ -32,7 +31,8 @@ public class CommentController {
 	@PostMapping
 	public ResponseEntity<CommentResponseDto> saveComment(
 		@RequestBody CommentRequestDto dto,
-		@PathVariable Long orderId,
+		@RequestParam Long productId,
+		@RequestParam Long productOrderId,
 		@AuthenticationPrincipal AuthUser authUser){
 		return new ResponseEntity<>(commentService.saveComment(orderId,authUser.getUser().getId(), dto), HttpStatus.OK);
 	}
@@ -49,7 +49,8 @@ public class CommentController {
 
 	@DeleteMapping("/{reviewId}")
 	public ResponseEntity<CommentMessageResponseDto> DeleteComment(
-		@PathVariable Long orderId,
+		@RequestParam Long productId,
+		@RequestParam Long productOrderId,
 		@PathVariable Long reviewId,
 		@AuthenticationPrincipal AuthUser authUser
 	){
