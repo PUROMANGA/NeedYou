@@ -33,8 +33,8 @@ public class CommentController {
 	public ResponseEntity<CommentResponseDto> saveComment(
 		@RequestBody CommentRequestDto dto,
 		@PathVariable Long orderId,
-		@AuthenticationPrincipal UserDeatil userDeatil){
-		return new ResponseEntity<>(commentService.saveComment(orderId, userDeatil.getUserId(), dto), HttpStatus.OK);
+		@AuthenticationPrincipal AuthUser authUser){
+		return new ResponseEntity<>(commentService.saveComment(orderId,authUser.getUser().getId(), dto), HttpStatus.OK);
 	}
 
 	@GetMapping
@@ -51,8 +51,8 @@ public class CommentController {
 	public ResponseEntity<CommentMessageResponseDto> DeleteComment(
 		@PathVariable Long orderId,
 		@PathVariable Long reviewId,
-		@AuthenticationPrincipal UserDeatil userDeatil
+		@AuthenticationPrincipal AuthUser authUser
 	){
-		return new ResponseEntity<>(commentService.deleteComment(orderId,userDeatil.getuserId(), reviewId), HttpStatus.OK);
+		return new ResponseEntity<>(commentService.deleteComment(orderId,authUser.getUser().getId(), reviewId), HttpStatus.OK);
 	}
 }
