@@ -1,7 +1,7 @@
 package com.example.shopingplusassignment.domain.seller.entity;
 
-import base_entity.BaseEntity;
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
+import com.example.shopingplusassignment.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,9 +19,6 @@ public class Seller {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Brand> brands = new ArrayList<>();
-
     private String name; // 업체명
 
     private String ceoName; // 대표자명
@@ -35,6 +32,18 @@ public class Seller {
     private String businessAddress; // 사업장 소재지
 
     private String customerServiceNumber; // 고객센터 전화번호
+
+    @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Brand> brands = new ArrayList<>();
+
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false, unique = true)
+    private User user;
+
+    public Seller(String name, User user) {
+        this.ceoName = name;
+        this.user = user;
+    }
 
     public Seller(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber) {
         this.name = name;
