@@ -53,6 +53,6 @@ public class CommentController {
 		@PathVariable Long reviewId,
 		@AuthenticationPrincipal UserDeatil userDeatil
 	){
-		return new ResponseEntity<>(commentService.deleteComment(orderId,userDeatil.getuserId(), reviewId));
+		return new ResponseEntity<>(commentService.deleteComment(orderId,userDeatil.getuserId(), reviewId), HttpStatus.OK);
 	}
 }
