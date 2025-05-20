@@ -17,17 +17,10 @@ public interface AddressRepository extends JpaRepository<Address, Long> {
 
 	long countByUser_Id(Long userId);
 
-	@Query("SELECT COUNT(a) > 0"
-		+ "FROM Address a "
-		+ "WHERE a.user.id = :userId AND a.isDefaultAddress = true")
+	@Query("SELECT COUNT(a) > 0 FROM Address a WHERE a.user.id = :userId AND a.isDefaultAddress = true")
 	boolean existsDefaultAddress(Long userId);
 
 	@Query("SELECT a FROM Address a WHERE a.user.id = :userId AND a.isDefaultAddress = true")
-	Optional<Address> findDefaultAddress (Long userId);
+	Address findDefaultAddress (Long userId);
 
-	Long user(User user);
-
-	Long user(User user);
-
-	Long user(User user);
 }

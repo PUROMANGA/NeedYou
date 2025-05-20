@@ -1,6 +1,5 @@
 package com.example.shopingplusassignment.domain.user.controller;
 
-import com.example.shopingplusassignment.domain.user.dto.request.UserUpdateRequest;
 import com.example.shopingplusassignment.domain.user.dto.response.UserResponse;
 import com.example.shopingplusassignment.domain.user.service.UserService;
 import lombok.RequiredArgsConstructor;
