@@ -37,4 +37,14 @@ public class BrandController {
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 
+    @PutMapping("/{brandId}")
+    private ResponseEntity<BrandResponseDto> updateBrand(
+            @PathVariable Long brandId,
+            @Valid @RequestBody BrandCreateRequestDto requestDto,
+            @AuthenticationPrincipal AuthUser authUser
+    ) {
+        BrandResponseDto brandResponseDto = brandService.updateBrand(brandId, requestDto, authUser.getUser());
+        return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
+    }
+
 }

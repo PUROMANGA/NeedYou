@@ -11,6 +11,8 @@ import com.example.shopingplusassignment.domain.user.entity.User;
 import com.example.shopingplusassignment.domain.user.enums.UserRole;
 import error.CustomRuntimeException;
 import error.ExceptionCode;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
@@ -52,6 +54,20 @@ public class BrandService {
 
         }
 
+    @Transactional
+    public BrandResponseDto updateBrand(Long brandId, BrandCreateRequestDto requestDto, User user) {
 
+        if (user.getUserRole() != UserRole.SELLER) {
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);
+        }
+
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
+
+        brand.update(requestDto.getBrandName());
+
+        return BrandResponseDto.of(brand);
+
+    }
 
 }
