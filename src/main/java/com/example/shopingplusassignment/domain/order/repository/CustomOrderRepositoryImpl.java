@@ -25,14 +25,14 @@ public class CustomOrderRepositoryImpl implements CustomOrderRepository{
     QUser user = QUser.user;
 
     @Override
-    public List<ResponseOrderDto> findOrdersByEmail(Long userid) {
+    public List<ResponseOrderDto> findResponseOrderDtoByUserId(Long userid) {
 
         List<ResponseOrderDto> responseOrderDtos = jpaQueryFactory
                 .select(Projections.constructor(ResponseOrderDto.class,
-                        product.name,
-                        product.price,
                         address,
                         cart,
+                        product.name,
+                        product.price,
                         cart.amount.multiply(product.price)))
                 .from(order)
                 .join(cart).on(cart.userId.eq(userid))

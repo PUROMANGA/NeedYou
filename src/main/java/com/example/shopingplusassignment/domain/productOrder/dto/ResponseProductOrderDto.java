@@ -29,6 +29,8 @@ public class ResponseProductOrderDto {
                 .amount(this.amount)
                 .totalPrice(this.totalPrice)
                 .order(this.order)
+                .creatTime(this.creatTime)
+                .modifiedTime(this.modifiedTime)
                 .build();
     }
 }

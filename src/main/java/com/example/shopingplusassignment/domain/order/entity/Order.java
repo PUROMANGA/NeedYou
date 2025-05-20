@@ -1,6 +1,7 @@
 package com.example.shopingplusassignment.domain.order.entity;
 
 import base_entity.BaseEntity;
+import com.example.shopingplusassignment.domain.order.common.OrderStatus;
 import com.example.shopingplusassignment.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,8 +26,16 @@ public class Order extends BaseEntity {
 
     private Long addressId;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private OrderStatus orderStatus;
+
     public Order(User user, Long addressId) {
         this.user = user;
         this.addressId = addressId;
+    }
+
+    public void changeOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 }

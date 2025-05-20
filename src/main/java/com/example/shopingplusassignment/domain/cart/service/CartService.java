@@ -62,7 +62,7 @@ public class CartService {
      */
     @Transactional(readOnly = true)
     public Page<CartResponseDto> getCartService(Long userId, Pageable pageable) {
-        Page<CartResponseDto> cart = cartRepository.findByIdForPage(userId, pageable);
+        Page<CartResponseDto> cart = cartRepository.findCartResponseDtoByUserId(userId, pageable);
         if(cart.isEmpty()) {
             throw new RuntimeException("카트가 비어있습니다");
         }

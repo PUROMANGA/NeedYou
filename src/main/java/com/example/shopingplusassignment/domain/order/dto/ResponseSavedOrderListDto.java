@@ -1,19 +1,22 @@
 package com.example.shopingplusassignment.domain.order.dto;
 
-import com.example.shopingplusassignment.domain.order.entity.Order;
 import com.example.shopingplusassignment.domain.productOrder.entity.ProductOrder;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.domain.Page;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Getter
-@AllArgsConstructor
 @NoArgsConstructor
 
 public class ResponseSavedOrderListDto {
-    private Order order;
     private ProductOrder productOrder;
+    private LocalDateTime creatTime;
+    private LocalDateTime modifiedTime;
+
+    public ResponseSavedOrderListDto(ProductOrder productOrder, LocalDateTime creatTime, LocalDateTime modifiedTime) {
+        this.productOrder = productOrder;
+        this.creatTime = creatTime;
+        this.modifiedTime = modifiedTime;
+    }
 }

@@ -5,6 +5,7 @@ import com.example.shopingplusassignment.domain.cart.dto.CartRequestDto;
 import com.example.shopingplusassignment.domain.cart.dto.CartResponseDto;
 import com.example.shopingplusassignment.domain.cart.entity.Cart;
 import com.example.shopingplusassignment.domain.cart.service.CartService;
+import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 import com.example.shopingplusassignment.domain.user.entity.User;
 import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 import error.CustomRuntimeException;
@@ -41,8 +42,8 @@ public class CartController {
     public ResponseEntity<CartResponseDto> postCartController(
             @RequestBody @Validated CartRequestDto cartRequestDto,
             @PathVariable Long productId,
-            @AuthenticationPrincipal User userDetail) {
-        CartResponseDto cartResponseDto = cartService.postCartService(cartRequestDto, productId, userDetail.getEmail());
+            @AuthenticationPrincipal AuthUser user) {
+        CartResponseDto cartResponseDto = cartService.postCartService(cartRequestDto, productId, user.getUsername());
         return ResponseEntity.ok(cartResponseDto);
     }
 
@@ -70,9 +71,9 @@ public class CartController {
 
     @GetMapping
     public ResponseEntity<Page<CartResponseDto>> getCartController(
-            @AuthenticationPrincipal User userDetail,
+            @AuthenticationPrincipal AuthUser authUser,
             @PageableDefault(size = 10, sort = "creatTime", direction = DESC) Pageable pageable) {
-        User user = userRepository.findByEmail(userDetail.getEmail()).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
+        User user = userRepository.findByEmail(authUser.getUsername()).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
         return ResponseEntity.ok(cartService.getCartService(user.getId(), pageable));
     }
 
@@ -85,8 +86,8 @@ public class CartController {
     @DeleteMapping("/{cartId}")
     public ResponseEntity<String> deleteCartController(
             @PathVariable Long cartId,
-            @AuthenticationPrincipal User userDetail) {
-        cartService.deleteCartService(cartId, userDetail.getEmail());
+            @AuthenticationPrincipal AuthUser user) {
+        cartService.deleteCartService(cartId, user.getUsername());
         return ResponseEntity.ok("장바구니 삭제가 완료되었습니다.");
     }
 }
