@@ -64,7 +64,7 @@ public class Comment extends BaseEntity {
 		this.product = order.getProduct();
 	}
 	//TestCode 전용
-	public Comment(String title, String description, int rating, dto, Order order){
+	public Comment(String title, String description, int rating, Order order){
 		this.title = title;
 		this.description = description;
 		this.rating = rating;
