@@ -59,7 +59,11 @@ public class SellerService {
     }
 
     @Transactional
-    public SellerResponseDto updateSeller(Long sellerId, updateSellerRequestDto updateSellerRequestDto) {
+    public SellerResponseDto updateSeller(Long sellerId, updateSellerRequestDto updateSellerRequestDto, User user) {
+
+        if (user.getUserRole() != UserRole.SELLER) {
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
+        }
 
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));

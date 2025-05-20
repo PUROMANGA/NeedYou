@@ -34,7 +34,7 @@ public class SellerController {
     public ResponseEntity<SellerResponseDto> getSeller(
             @PathVariable Long sellerId,
             @AuthenticationPrincipal AuthUser authUser
-    ) { 
+    ) {
         SellerResponseDto sellerResponseDto = sellerService.getSeller(sellerId, authUser.getUser());
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
     }
@@ -46,7 +46,7 @@ public class SellerController {
             @Valid @RequestBody updateSellerRequestDto updateSellerRequestDto,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        SellerResponseDto sellerResponseDto = sellerService.updateSeller(sellerId, updateSellerRequestDto);
+        SellerResponseDto sellerResponseDto = sellerService.updateSeller(sellerId, updateSellerRequestDto, authUser.getUser());
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
     }
 
