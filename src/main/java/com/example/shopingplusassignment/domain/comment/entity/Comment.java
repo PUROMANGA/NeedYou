@@ -63,6 +63,14 @@ public class Comment extends BaseEntity {
 		this.user = order.getUser();
 		this.product = order.getProduct();
 	}
+	//TestCode 전용
+	public Comment(String title, String description, int rating, dto, Order order){
+		this.title = title;
+		this.description = description;
+		this.rating = rating;
+		this.user = order.getUser();
+		this.product = order.getProduct();
+	}
 
 	public void markAsDeleted(boolean isDelete, LocalDateTime now){
 		this.isDelete = isDelete;
