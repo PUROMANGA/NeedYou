@@ -1,14 +1,15 @@
 package com.example.shopingplusassignment.domain.seller.controller;
 
+import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 import com.example.shopingplusassignment.domain.seller.dto.request.StoreCreateRequestDto;
 import com.example.shopingplusassignment.domain.seller.dto.request.updateSellerRequestDto;
 import com.example.shopingplusassignment.domain.seller.dto.response.SellerResponseDto;
-import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.service.SellerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -21,9 +22,10 @@ public class SellerController {
     // 판매자 정보 등록
     @PostMapping // 추후 jwt 적용
     public ResponseEntity<SellerResponseDto> createSeller(
-            @Valid @RequestBody StoreCreateRequestDto requestDto
-    ) {
-        SellerResponseDto sellerResponseDto = sellerService.createSeller(requestDto);
+            @Valid @RequestBody StoreCreateRequestDto requestDto,
+            @AuthenticationPrincipal AuthUser authUser
+            ) {
+        SellerResponseDto sellerResponseDto = sellerService.createSeller(requestDto, authUser.getUser());
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.CREATED);
     }
 

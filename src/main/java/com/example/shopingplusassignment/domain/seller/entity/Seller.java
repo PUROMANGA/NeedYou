@@ -40,22 +40,19 @@ public class Seller {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-    public Seller(String name, User user) {
-        this.ceoName = name;
-        this.user = user;
-    }
 
-    public Seller(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber) {
+    public Seller(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber, User user) {
         this.name = name;
         this.ceoName = ceoName;
         this.email = email;
         this.businessNumber = businessNumber;
         this.businessAddress = businessAddress;
         this.customerServiceNumber = customerServiceNumber;
+        this.user = user;
     }
 
-    public static Seller createSeller(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber) {
-        return new Seller(name, ceoName, email, businessNumber, businessAddress, customerServiceNumber);
+    public static Seller createSeller(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber, User user) {
+        return new Seller(name, ceoName, email, businessNumber, businessAddress, customerServiceNumber, user);
     }
 
     public void update(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber) {

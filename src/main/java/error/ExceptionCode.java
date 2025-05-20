@@ -13,6 +13,7 @@ public enum ExceptionCode implements ErrorCode {
     BRAND_CANT_FIND(HttpStatus.BAD_REQUEST, "브랜드를 찾을 수 없습니다"),
     USER_CANT_FIND(HttpStatus.BAD_REQUEST, "유저를 찾을 수 없습니다"),
     PRODUCT_CANT_FIND(HttpStatus.BAD_REQUEST, "상품을 찾을 수 없습니다"),
+    SELLER_NOT_FOUND(HttpStatus.NOT_FOUND, "판매자를 찾을 수 없습니다."),
 
 
     // 배송지 정보
@@ -24,8 +25,9 @@ public enum ExceptionCode implements ErrorCode {
     CANNOT_DELETE_DEFAULT_ADDRESS(HttpStatus.BAD_REQUEST, "기본 배송지는 삭제할 수 없습니다."),
     CANNOT_UNSET_DEFAULT_ADDRESS(HttpStatus.BAD_REQUEST, "기본 배송지는 해제할 수 없으며, 다른 배송지를 기본으로 설정하면 기존 기본 배송지가 해제됩니다."),
 
-    // 셀러
-    SELLER_NOT_FOUND(HttpStatus.NOT_FOUND, "판매자를 찾을 수 없습니다.");
+    // 판매자 정보
+    UNAUTHORIZED_SELLER_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;

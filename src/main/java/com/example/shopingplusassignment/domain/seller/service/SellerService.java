@@ -5,6 +5,8 @@ import com.example.shopingplusassignment.domain.seller.dto.request.updateSellerR
 import com.example.shopingplusassignment.domain.seller.dto.response.SellerResponseDto;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
+import com.example.shopingplusassignment.domain.user.entity.User;
+import com.example.shopingplusassignment.domain.user.enums.UserRole;
 import error.CustomRuntimeException;
 import error.ExceptionCode;
 import jakarta.transaction.Transactional;
@@ -22,7 +24,12 @@ public class SellerService {
 
     // todo 접근 권한, 로그인 여부 추가
 
-    public SellerResponseDto createSeller(StoreCreateRequestDto requestDto) {
+    public SellerResponseDto createSeller(StoreCreateRequestDto requestDto, User user) {
+
+        // 로그인한 사람의 userrole이 seller인지 확인
+        if (user.getUserRole() != UserRole.SELLER) {
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
+        }
 
         Seller seller = Seller.createSeller(
                 requestDto.getCompanyName(),
@@ -30,7 +37,8 @@ public class SellerService {
                 requestDto.getEmail(),
                 requestDto.getBusinessNumber(),
                 requestDto.getBusinessAddress(),
-                requestDto.getCsNumber()
+                requestDto.getCsNumber(),
+                user
                 );
 
         Seller saved = sellerRepository.save(seller);
