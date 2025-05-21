@@ -50,7 +50,6 @@ public class BrandController {
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 
-    // todo 여기 수정 !!!!!! CreateBrandRequestDto -> UpdateBrandRequestD
     /**
      * 브랜드 수정 요청 컨트롤러 (Seller 한정)
      *
@@ -65,7 +64,8 @@ public class BrandController {
             @Valid @RequestBody UpdateBrandRequestDto requestDto,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        BrandResponseDto brandResponseDto = brandService.updateBrand(brandId, requestDto, authUser.getUser());
+        Long userId = authUser.getUser().getId();
+        BrandResponseDto brandResponseDto = brandService.updateBrand(brandId, requestDto, userId);
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 

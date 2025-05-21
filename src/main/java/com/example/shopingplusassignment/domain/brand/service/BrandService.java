@@ -67,15 +67,23 @@ public class BrandService {
      *
      * @param brandId 브랜드 정보 식별자
      * @param requestDto 브랜드 생성 요청 정보가 담긴 {@link UpdateBrandRequestDto} 객체
-     * @param user 현재 로그인 유저
+     * @param userId 현재 로그인 유저 식별자
      * @return 수정한 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
      */
     @Transactional
     @Secured("ROLE_SELLER")
-    public BrandResponseDto updateBrand(Long brandId, UpdateBrandRequestDto requestDto, User user) {
+    public BrandResponseDto updateBrand(Long brandId, UpdateBrandRequestDto requestDto, Long userId) {
+
+        Seller seller = sellerRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_CREATION));
 
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
+
+        // 본인 브랜드만 수정 가능
+        if (!brand.getSeller().equals(seller)) {
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);
+        }
 
         brand.update(requestDto.getBrandName());
 
