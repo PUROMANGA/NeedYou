@@ -11,7 +11,6 @@ import error.CustomRuntimeException;
 import error.ExceptionCode;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +42,7 @@ public class BrandService {
         brandRepository.save(brand);
 
         return BrandResponseDto.of(brand);
+
     }
 
     /**
@@ -52,7 +52,7 @@ public class BrandService {
      * @return 식별자에 해당하는 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
      */
     // 추후 브랜드 조회시 상품 리스트 같이 response 해주기
-    @Transactional
+    @Transactional(readOnly = true)
     public BrandResponseDto getBrand(Long brandId) {
 
         Brand brand = brandRepository.findById(brandId)

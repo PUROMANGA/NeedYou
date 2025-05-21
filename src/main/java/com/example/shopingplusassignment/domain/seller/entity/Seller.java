@@ -40,7 +40,6 @@ public class Seller {
     @JoinColumn(name = "user_id", nullable = false, unique = true)
     private User user;
 
-
     public Seller(String name, String ceoName, String email, String businessNumber, String businessAddress, String customerServiceNumber, User user) {
         this.name = name;
         this.ceoName = ceoName;

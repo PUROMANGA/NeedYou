@@ -9,9 +9,7 @@ import lombok.RequiredArgsConstructor;
 public class BrandResponseDto {
 
     private final Long id;
-
     private final String brandName;
-
     private final String sellerName;
 
     public static BrandResponseDto of(Brand brand) {
