@@ -76,7 +76,7 @@ public class BrandService {
      * @return 수정한 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
      */
     @Transactional
-    public BrandResponseDto updateBrand(Long brandId, CreateBrandRequestDto requestDto, User user) {
+    public BrandResponseDto updateBrand(Long brandId, UpdateBrandRequestDto requestDto, User user) {
 
         if (user.getUserRole() != UserRole.SELLER) {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);

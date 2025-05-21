@@ -1,6 +1,7 @@
 package com.example.shopingplusassignment.domain.brand.controller;
 
 import com.example.shopingplusassignment.domain.brand.dto.request.CreateBrandRequestDto;
+import com.example.shopingplusassignment.domain.brand.dto.request.UpdateBrandRequestDto;
 import com.example.shopingplusassignment.domain.brand.dto.response.BrandResponseDto;
 import com.example.shopingplusassignment.domain.brand.service.BrandService;
 import com.example.shopingplusassignment.domain.common.dto.AuthUser;
@@ -56,14 +57,14 @@ public class BrandController {
      * 브랜드 수정 요청 컨트롤러 (Seller 한정)
      *
      * @param brandId　조회할 브랜드의 ID
-     * @param requestDto　브랜드 수정 요청 정보가 담긴 {@link CreateBrandRequestDto} 객체
+     * @param requestDto　브랜드 수정 요청 정보가 담긴 {@link UpdateBrandRequestDto} 객체
      * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
      * @return 수정된 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
      */
     @PutMapping("/{brandId}")
     private ResponseEntity<BrandResponseDto> updateBrand(
             @PathVariable Long brandId,
-            @Valid @RequestBody CreateBrandRequestDto requestDto,
+            @Valid @RequestBody UpdateBrandRequestDto requestDto,
             @AuthenticationPrincipal AuthUser authUser
     ) {
         BrandResponseDto brandResponseDto = brandService.updateBrand(brandId, requestDto, authUser.getUser());
