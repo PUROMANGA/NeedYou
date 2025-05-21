@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class StoreCreateRequestDto {
+public class CreateStoreRequestDto {
 
     @NotBlank(message = "업체명을 입력해주세요.")
     private final String companyName;

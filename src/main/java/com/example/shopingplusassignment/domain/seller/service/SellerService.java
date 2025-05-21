@@ -1,6 +1,6 @@
 package com.example.shopingplusassignment.domain.seller.service;
 
-import com.example.shopingplusassignment.domain.seller.dto.request.StoreCreateRequestDto;
+import com.example.shopingplusassignment.domain.seller.dto.request.CreateStoreRequestDto;
 import com.example.shopingplusassignment.domain.seller.dto.request.UpdateSellerRequestDto;
 import com.example.shopingplusassignment.domain.seller.dto.response.SellerResponseDto;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
@@ -24,7 +24,7 @@ public class SellerService {
 
     @Transactional
     @Secured("ROLE_SELLER")
-    public SellerResponseDto createSeller(StoreCreateRequestDto requestDto, Long userId) {
+    public SellerResponseDto createSeller(CreateStoreRequestDto requestDto, Long userId) {
 
         // 로그인으로 발급된 토큰에서 userId 정보 가져옴 -> user 리포지토리에서 해당 id 찾아 비교 후 있으면 유저 가져와, 없으면
         User user = userRepository.findById(userId)
