@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.shopingplusassignment.domain.comment.dto.CommentGetInfoDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentMessageResponseDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentRequestDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
 import com.example.shopingplusassignment.domain.comment.repository.CommentRepository;
 import com.example.shopingplusassignment.domain.comment.service.CommentServiceImpl;
+import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 
 @RestController
 @RequestMapping("/reviews")
@@ -31,29 +33,30 @@ public class CommentController {
 	@PostMapping
 	public ResponseEntity<CommentResponseDto> saveComment(
 		@RequestBody CommentRequestDto dto,
+		@RequestParam Long orderId,
 		@RequestParam Long productId,
-		@RequestParam Long productOrderId,
 		@AuthenticationPrincipal AuthUser authUser){
-		return new ResponseEntity<>(commentService.saveComment(orderId,authUser.getUser().getId(), dto), HttpStatus.OK);
+		return new ResponseEntity<>(commentService.saveComment(orderId, productId, authUser.getUser().getId(), dto), HttpStatus.OK);
 	}
 
 	@GetMapping
-	public ResponseEntity<List<CommentResponseDto>> findByCommentRating(
+	public ResponseEntity<List<CommentGetInfoDto>> findByCommentRating(
+		@RequestParam(required = false) Long productId,
 		@RequestParam(defaultValue = "0")int min,
 		@RequestParam(defaultValue = "5") int max,
-		@RequestParam(defaultValue = "1") int page,
+		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size
 	) {
-		return new ResponseEntity<>(commentService.getCommentByRating(min, max, page, size), HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(commentService.getCommentByRating(min, max, page, size), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{reviewId}")
 	public ResponseEntity<CommentMessageResponseDto> DeleteComment(
+		@RequestParam Long orderId,
 		@RequestParam Long productId,
-		@RequestParam Long productOrderId,
 		@PathVariable Long reviewId,
 		@AuthenticationPrincipal AuthUser authUser
 	){
-		return new ResponseEntity<>(commentService.deleteComment(orderId,authUser.getUser().getId(), reviewId), HttpStatus.OK);
+		return new ResponseEntity<>(commentService.deleteComment( orderId, productId, authUser.getUser().getId(), reviewId), HttpStatus.OK);
 	}
 }

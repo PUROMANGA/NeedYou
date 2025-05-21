@@ -1,15 +1,17 @@
 package com.example.shopingplusassignment.domain.comment.dto;
 
 import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
 @Getter
+@RequiredArgsConstructor
 public class CommentMessageResponseDto {
-	String State;
-
-	String Message;
+	private String state;
+	private String message;
 
 	public CommentMessageResponseDto(String state, String message) {
-		State = state;
-		Message = message;
+		this.state = state;
+		this.message = message;
 	}
+
 }
