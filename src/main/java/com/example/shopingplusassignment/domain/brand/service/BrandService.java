@@ -1,7 +1,7 @@
 package com.example.shopingplusassignment.domain.brand.service;
 
-import com.example.shopingplusassignment.domain.brand.dto.CreateBrandRequestDto;
-import com.example.shopingplusassignment.domain.brand.dto.BrandResponseDto;
+import com.example.shopingplusassignment.domain.brand.dto.request.CreateBrandRequestDto;
+import com.example.shopingplusassignment.domain.brand.dto.response.BrandResponseDto;
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.brand.repository.BrandRepository;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;

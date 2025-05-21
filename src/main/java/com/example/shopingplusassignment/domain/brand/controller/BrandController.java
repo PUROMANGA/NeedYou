@@ -1,7 +1,7 @@
 package com.example.shopingplusassignment.domain.brand.controller;
 
-import com.example.shopingplusassignment.domain.brand.dto.CreateBrandRequestDto;
-import com.example.shopingplusassignment.domain.brand.dto.BrandResponseDto;
+import com.example.shopingplusassignment.domain.brand.dto.request.CreateBrandRequestDto;
+import com.example.shopingplusassignment.domain.brand.dto.response.BrandResponseDto;
 import com.example.shopingplusassignment.domain.brand.service.BrandService;
 import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 import jakarta.validation.Valid;
