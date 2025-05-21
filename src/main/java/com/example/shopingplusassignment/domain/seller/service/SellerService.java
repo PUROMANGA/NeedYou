@@ -1,7 +1,7 @@
 package com.example.shopingplusassignment.domain.seller.service;
 
 import com.example.shopingplusassignment.domain.seller.dto.request.StoreCreateRequestDto;
-import com.example.shopingplusassignment.domain.seller.dto.request.updateSellerRequestDto;
+import com.example.shopingplusassignment.domain.seller.dto.request.UpdateSellerRequestDto;
 import com.example.shopingplusassignment.domain.seller.dto.response.SellerResponseDto;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
@@ -14,9 +14,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,14 +60,16 @@ public class SellerService {
     }
 
     @Transactional
-    public SellerResponseDto updateSeller(Long sellerId, updateSellerRequestDto updateSellerRequestDto, User user) {
-
-        if (user.getUserRole() != UserRole.SELLER) {
-            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
-        }
+    @Secured("ROLE_SELLER")
+    public SellerResponseDto updateSeller(Long sellerId, UpdateSellerRequestDto updateSellerRequestDto, Long userId) {
 
         Seller seller = sellerRepository.findById(sellerId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
+
+        // 본인의 seller 정보만 수정 가능
+        if (!seller.getUser().getId().equals(userId)) {
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
+        }
 
         seller.update(
                 updateSellerRequestDto.getCompanyName(),
