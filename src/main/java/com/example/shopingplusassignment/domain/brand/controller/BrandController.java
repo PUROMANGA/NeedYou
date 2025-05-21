@@ -18,6 +18,13 @@ public class BrandController {
 
     private final BrandService brandService;
 
+    /**
+     * 브랜드 생성 요청 컨트롤러 (Seller 한정)
+     *
+     * @param requestDto 브랜드 생성 요청 정보가 담긴 {@link CreateBrandRequestDto} 객체
+     * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+     * @return 생성된 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
+     */
     @PostMapping
     private ResponseEntity<BrandResponseDto> createBrand(
             @Valid @RequestBody CreateBrandRequestDto requestDto,
@@ -27,6 +34,14 @@ public class BrandController {
         return new ResponseEntity<>(brandResponseDto, HttpStatus.CREATED);
     }
 
+    // TODO 현재(5/21 15시 기준) seller만 조회 가능 -> user, seller 전부 접근 가능하게 변경 必
+    /**
+     * 브랜드 조회 요청 컨트롤러
+     *
+     * @param brandId 조회할 브랜드의 ID
+     * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+     * @return 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
+     */
     @GetMapping("/{brandId}")
     private ResponseEntity<BrandResponseDto> getBrand(
             @PathVariable Long brandId,
@@ -36,6 +51,15 @@ public class BrandController {
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 
+    // todo 여기 수정 !!!!!! CreateBrandRequestDto -> UpdateBrandRequestDto
+    /**
+     * 브랜드 수정 요청 컨트롤러 (Seller 한정)
+     *
+     * @param brandId　조회할 브랜드의 ID
+     * @param requestDto　브랜드 수정 요청 정보가 담긴 {@link CreateBrandRequestDto} 객체
+     * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+     * @return 수정된 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
+     */
     @PutMapping("/{brandId}")
     private ResponseEntity<BrandResponseDto> updateBrand(
             @PathVariable Long brandId,
@@ -46,6 +70,13 @@ public class BrandController {
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 
+    /**
+     * 브랜드 삭제 요청 컨트롤러 (Seller 한정)
+     *
+     * @param brandId 조회할 브랜드의 ID
+     * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+     * @return 메세지 응답, 성공 - 200
+     */
     @DeleteMapping("/{brandId}")
     public ResponseEntity<Void> deleteBrand(
             @PathVariable Long brandId,
