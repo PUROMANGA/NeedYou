@@ -52,7 +52,7 @@ public class SellerService {
     @Transactional(readOnly = true)
     public SellerResponseDto getSeller(Long sellerId) {
 
-        Seller seller = sellerRepository.findById(sellerId)
+        Seller seller = sellerRepository.findByIdFetchUser(sellerId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
 
         return SellerResponseDto.of(seller);
@@ -62,7 +62,7 @@ public class SellerService {
     @Secured("ROLE_SELLER")
     public SellerResponseDto updateSeller(Long sellerId, UpdateSellerRequestDto updateSellerRequestDto, Long userId) {
 
-        Seller seller = sellerRepository.findById(sellerId)
+        Seller seller = sellerRepository.findByIdFetchUser(sellerId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
 
         // 본인의 seller 정보만 수정 가능
@@ -86,7 +86,7 @@ public class SellerService {
     @Secured("ROLE_SELLER")
     public void deleteSeller(Long sellerId, Long userId) {
 
-        Seller seller = sellerRepository.findById(sellerId)
+        Seller seller = sellerRepository.findByIdFetchUser(sellerId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
 
         if (!seller.getUser().getId().equals(userId)) {
