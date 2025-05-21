@@ -53,6 +53,7 @@ public class ProductService {
 
     @Transactional
     public ResponseProductDto patchProductService(RequestProductDto requestProductDto,Long brandId, Long productId, String email) {
+        Brand brand = brandRepository.findById(brandId).orElseThrow(() ->new RuntimeException("브랜드 없음"));
         Product product = productRepository.findById(productId).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.PRODUCT_CANT_FIND));
         Seller seller = sellerRepository.findByEmail(email);
 
@@ -60,8 +61,7 @@ public class ProductService {
             throw new RuntimeException("등록자와 일치하지 않습니다.");
         }
 
-        if(!product.getBrand().getName().equals(requestProductDto.getBrandName())) {
-            Brand brand = brandRepository.findByName(requestProductDto.getBrandName());
+        if(!product.getBrand().getName().equals(brand.getName())) {
             product.update(requestProductDto, brand);
         }
 

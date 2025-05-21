@@ -1,6 +1,5 @@
 package com.example.shopingplusassignment.domain.productOrder.repository;
 
-import com.example.shopingplusassignment.domain.order.dto.ResponseOrderDto;
 import com.example.shopingplusassignment.domain.order.dto.ResponseSavedOrderListDto;
 import com.example.shopingplusassignment.domain.productOrder.dto.ResponseProductOrderDto;
 import org.springframework.data.domain.Page;

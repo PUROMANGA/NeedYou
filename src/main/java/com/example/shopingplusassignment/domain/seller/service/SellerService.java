@@ -9,9 +9,9 @@ import com.example.shopingplusassignment.domain.user.entity.User;
 import com.example.shopingplusassignment.domain.user.enums.UserRole;
 import error.CustomRuntimeException;
 import error.ExceptionCode;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,6 +24,7 @@ public class SellerService {
 
     // todo 접근 권한, 로그인 여부 추가
 
+    @Transactional
     public SellerResponseDto createSeller(StoreCreateRequestDto requestDto, User user) {
 
         // 로그인한 사람의 userrole이 seller인지 확인
@@ -46,6 +47,7 @@ public class SellerService {
         return SellerResponseDto.of(saved);
     }
 
+    @Transactional(readOnly = true)
     public SellerResponseDto getSeller(Long sellerId, User user) {
 
         if (user.getUserRole() != UserRole.SELLER) {

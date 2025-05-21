@@ -1,6 +1,9 @@
 package com.example.shopingplusassignment.domain.cart.dto;
 
 import com.example.shopingplusassignment.domain.address.entity.Address;
+import lombok.Getter;
+
+@Getter
 
 public class CartProductDto {
     private Address address;

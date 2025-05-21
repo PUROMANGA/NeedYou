@@ -1,7 +1,7 @@
 package com.example.shopingplusassignment.domain.productOrder.repository;
 
+
 import com.example.shopingplusassignment.domain.cart.entity.QCart;
-import com.example.shopingplusassignment.domain.order.dto.ResponseOrderDto;
 import com.example.shopingplusassignment.domain.order.dto.ResponseSavedOrderListDto;
 import com.example.shopingplusassignment.domain.order.entity.QOrder;
 import com.example.shopingplusassignment.domain.product.entity.QProduct;
@@ -58,18 +58,16 @@ public class CustomProductOrderRepositoryImpl implements CustomProductOrderRepos
 
         List<ResponseSavedOrderListDto> result = jpaQueryFactory
                 .select(Projections.constructor(ResponseSavedOrderListDto.class,
-                        productOrder,
+                        order,
                         order.creatTime,
                         order.modifiedTime))
-                .from(productOrder)
-                .join(productOrder.order, order)
+                .from(order)
                 .where(order.id.eq(orderId))
                 .fetch();
 
         long total = jpaQueryFactory
                 .select(order.count())
-                .from(productOrder)
-                .join(productOrder.order, order)
+                .from(order)
                 .where(order.id.eq(orderId))
                 .fetchOne();
 

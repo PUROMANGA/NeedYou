@@ -5,6 +5,7 @@ import lombok.Getter;
 
 @Getter
 public class LoginResponseDto {
+
     private final String bearerToken;
 
     public LoginResponseDto(String bearerToken) {

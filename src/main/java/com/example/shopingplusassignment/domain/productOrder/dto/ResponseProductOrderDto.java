@@ -21,6 +21,17 @@ public class ResponseProductOrderDto {
     private LocalDateTime creatTime;
     private LocalDateTime modifiedTime;
 
+    public ResponseProductOrderDto(Long id, String name, Long price, Long amount, Long totalPrice, Order order, LocalDateTime creatTime, LocalDateTime modifiedTime) {
+        this.id = id;
+        this.name = name;
+        this.price = price;
+        this.amount = amount;
+        this.totalPrice = totalPrice;
+        this.order = order;
+        this.creatTime = creatTime;
+        this.modifiedTime = modifiedTime;
+    }
+
     public ProductOrder toEntity() {
         return ProductOrder.builder()
                 .id(this.id)

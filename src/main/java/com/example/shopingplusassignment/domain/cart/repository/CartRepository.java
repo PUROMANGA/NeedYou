@@ -11,9 +11,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface CartRepository extends JpaRepository<Cart, Long> {
-
-    Page<CartResponseDto> findByIdForPage(Long userId, Pageable pageable);
-
     List<Cart> findAllByUserId(Long userId);
 
     @Query("select new com.example.shopingplusassignment.domain.cart.dto.CartProductDto(" +
@@ -24,5 +21,6 @@ public interface CartRepository extends JpaRepository<Cart, Long> {
             "where c.userId = :userId " +
             "group by a, c.cartId, p.name, p.price")
     List<CartProductDto> findCartAndProductName(Long userId);
+
     Page<CartResponseDto> findCartResponseDtoByUserId(Long userId, Pageable pageable);
 }

@@ -63,7 +63,7 @@ public class OrderService {
     public ResponseSavedOrderDto postOrderService(String email) {
 
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
-        Address addresses = addressRepository.findDefaultAddress(user.getId()).orElseThrow(() -> new RuntimeException("주소가 없음"));
+        Address addresses = addressRepository.findDefaultAddress(user.getId());
 
         Order order = new Order(user, addresses.getId());
         order.changeOrderStatus(OrderStatus.PENDING);

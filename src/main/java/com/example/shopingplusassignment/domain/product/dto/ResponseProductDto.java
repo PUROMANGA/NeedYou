@@ -12,26 +12,24 @@ import java.time.LocalDateTime;
 public class ResponseProductDto {
 
     private Long productId;
-    private Brand brand;
+    private String brandName;
     private Long sellerId;
     private String name;
     private String description;
     private Long price;
     private Long stock;
-    private Long rating;
     private ProductCategory category;
     private LocalDateTime creatTime;
     private LocalDateTime modifiedTime;
 
     public ResponseProductDto(Product product) {
         this.productId = product.getId();
-        this.brand = product.getBrand();
+        this.brandName = product.getBrand().getName();
         this.sellerId = product.getSellerId();
         this.name = product.getName();
         this.description = product.getDescription();
         this.price = product.getPrice();
         this.stock = product.getStock();
-        this.rating = product.getRating();
         this.category = product.getProductCategory();
         this.creatTime = product.getModifiedTime();
         this.modifiedTime = product.getModifiedTime();
