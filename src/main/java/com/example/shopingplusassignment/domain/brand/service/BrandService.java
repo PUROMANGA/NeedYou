@@ -1,10 +1,9 @@
 package com.example.shopingplusassignment.domain.brand.service;
 
-import com.example.shopingplusassignment.domain.brand.dto.BrandCreateRequestDto;
+import com.example.shopingplusassignment.domain.brand.dto.CreateBrandRequestDto;
 import com.example.shopingplusassignment.domain.brand.dto.BrandResponseDto;
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.brand.repository.BrandRepository;
-import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
 import com.example.shopingplusassignment.domain.user.entity.User;
@@ -12,9 +11,7 @@ import com.example.shopingplusassignment.domain.user.enums.UserRole;
 import error.CustomRuntimeException;
 import error.ExceptionCode;
 import jakarta.transaction.Transactional;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,7 +21,7 @@ public class BrandService {
     private final BrandRepository brandRepository;
     private final SellerRepository sellerRepository;
 
-    public BrandResponseDto createBrand(BrandCreateRequestDto requestDto, User user) {
+    public BrandResponseDto createBrand(CreateBrandRequestDto requestDto, User user) {
 
         if (user.getUserRole() != UserRole.SELLER) {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);
@@ -55,7 +52,7 @@ public class BrandService {
         }
 
     @Transactional
-    public BrandResponseDto updateBrand(Long brandId, BrandCreateRequestDto requestDto, User user) {
+    public BrandResponseDto updateBrand(Long brandId, CreateBrandRequestDto requestDto, User user) {
 
         if (user.getUserRole() != UserRole.SELLER) {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);

@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class BrandCreateRequestDto {
+public class UpdateBrandRequestDto {
 
-    @NotBlank(message = "등록할 브랜드 이름을 입력해주세요.")
+    @NotBlank(message = "수정할 브랜드 이름을 입력해주세요.")
     private final String brandName;
 
 }
