@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +17,7 @@ import jakarta.persistence.Table;
 import lombok.Getter;
 
 import com.example.shopingplusassignment.domain.comment.dto.CommentRequestDto;
+import com.example.shopingplusassignment.domain.order.entity.Order;
 import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.user.entity.User;
 
@@ -27,11 +29,11 @@ public class Comment extends BaseEntity {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	Long id;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
 	User user;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id")
     Product product;
 
@@ -61,7 +63,7 @@ public class Comment extends BaseEntity {
 		this.description = dto.getDescription();
 		this.rating = dto.getRating();
 		this.user = order.getUser();
-		this.product = order.getProduct();
+
 	}
 	//TestCode 전용
 	public Comment(String title, String description, int rating, Order order){
@@ -69,7 +71,7 @@ public class Comment extends BaseEntity {
 		this.description = description;
 		this.rating = rating;
 		this.user = order.getUser();
-		this.product = order.getProduct();
+
 	}
 
 	public void markAsDeleted(boolean isDelete, LocalDateTime now){
