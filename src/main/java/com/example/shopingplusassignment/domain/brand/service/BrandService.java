@@ -11,6 +11,7 @@ import error.CustomRuntimeException;
 import error.ExceptionCode;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -75,6 +76,7 @@ public class BrandService {
 
         Seller seller = sellerRepository.findByUserId(userId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_CREATION));
+
 
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
