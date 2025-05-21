@@ -12,12 +12,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Table (name = "address")
+@NoArgsConstructor
 public class Address {
 
 	@Id
@@ -50,6 +55,16 @@ public class Address {
 	@Setter
 	@Column (nullable = false)
 	private Boolean isDefaultAddress;
+
+	public Address(User user, String address, Long zipCode, String recipient, String recipientNumber, String deliveryDescription, boolean isDefaultAddress) {
+		this.user = user;
+		this.address = address;
+		this.zipCode = zipCode;
+		this.recipient = recipient;
+		this.recipientNumber = recipientNumber;
+		this.deliveryDescription = deliveryDescription;
+		this.isDefaultAddress = isDefaultAddress;
+	}
 
 	public void update(UpdateAddressRequestDto dto){
 		if(dto.getZipCode() != null) this.zipCode = dto.getZipCode();
