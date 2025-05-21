@@ -10,4 +10,6 @@ public interface SellerRepository extends JpaRepository<Seller, Long> {
 
     Optional<Seller> findByUser(User user);
 
+    Optional<Seller> findByUserId(Long userId);
+
 }

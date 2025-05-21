@@ -27,17 +27,20 @@ public class BrandService {
      * 브랜드 생성 요청 서비스
      *
      * @param requestDto 브랜드 생성 요청 정보가 담긴 {@link CreateBrandRequestDto} 객체
-     * @param user 현재 로그인 유저
+     * @param userId 현재 로그인 유저 식별자
      * @return 생성된 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
      */
     @Transactional
     @Secured("ROLE_SELLER")
-    public BrandResponseDto createBrand(CreateBrandRequestDto requestDto, User user) {
+    public BrandResponseDto createBrand(CreateBrandRequestDto requestDto, Long userId) {
 
-        Seller seller = sellerRepository.findByUser(user) // todo user.getId() -> findby id?
-                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
+        // 유저 식별자로 로그인 확인
+        Seller seller = sellerRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_CREATION)); // "판매자 등록이 되어있지 않은 사용자입니다."
 
+        // 브랜드 생성 (이름, 셀러)
         Brand brand = Brand.create(requestDto.getBrandName(), seller);
+
         brandRepository.save(brand);
 
         return BrandResponseDto.of(brand);

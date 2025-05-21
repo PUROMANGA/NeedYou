@@ -31,7 +31,8 @@ public class BrandController {
             @Valid @RequestBody CreateBrandRequestDto requestDto,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        BrandResponseDto brandResponseDto = brandService.createBrand(requestDto, authUser.getUser());
+        Long userId = authUser.getUser().getId();
+        BrandResponseDto brandResponseDto = brandService.createBrand(requestDto, userId);
         return new ResponseEntity<>(brandResponseDto, HttpStatus.CREATED);
     }
 
