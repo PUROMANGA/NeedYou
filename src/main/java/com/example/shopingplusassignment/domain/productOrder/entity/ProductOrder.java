@@ -8,6 +8,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -15,7 +20,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 
-public class ProductOrder extends BaseEntity {
+public class ProductOrder {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,4 +41,14 @@ public class ProductOrder extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private Order order;
+
+    @Column(nullable = false)
+    private Long productId;
+
+    @CreatedDate
+    @Column(updatable = false)
+    private LocalDateTime creatTime;
+
+    @LastModifiedDate
+    private LocalDateTime modifiedTime;
 }

@@ -16,4 +16,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "from Product p " +
             "Where p.name LIKE CONCAT('%', :keyword, '%') OR p.description LIKE CONCAT('%', :keyword, '%')")
     Slice<ResponseProductDto> findByKeyword(String keyword, Pageable pageable);
+
 }

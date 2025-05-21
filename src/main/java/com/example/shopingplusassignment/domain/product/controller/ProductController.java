@@ -1,6 +1,7 @@
 package com.example.shopingplusassignment.domain.product.controller;
 
 
+import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 import com.example.shopingplusassignment.domain.product.dto.RequestProductDto;
 import com.example.shopingplusassignment.domain.product.dto.ResponseProductDto;
 import com.example.shopingplusassignment.domain.product.service.ProductService;
@@ -34,8 +35,8 @@ public class ProductController {
     public ResponseEntity<ResponseProductDto> postProductController(
             @RequestBody @Validated RequestProductDto requestProductDto,
             @PathVariable Long brandId,
-            @AuthenticationPrincipal User userDetail) {
-        ResponseProductDto responseProductDto = productService.postProductService(requestProductDto, brandId, userDetail.getEmail());
+            @AuthenticationPrincipal AuthUser user) {
+        ResponseProductDto responseProductDto = productService.postProductService(requestProductDto, brandId, user.getUsername());
         return ResponseEntity.ok(responseProductDto);
     }
 
@@ -52,9 +53,9 @@ public class ProductController {
             @RequestBody @Validated RequestProductDto requestProductDto,
             @PathVariable Long brandId,
             @PathVariable Long productId,
-            @AuthenticationPrincipal User userDetail) {
+            @AuthenticationPrincipal AuthUser user) {
 
-        ResponseProductDto responseProductDto = productService.patchProductService(requestProductDto, brandId, productId, userDetail.getEmail());
+        ResponseProductDto responseProductDto = productService.patchProductService(requestProductDto, brandId, productId, user.getUsername());
         return ResponseEntity.ok(responseProductDto);
     }
 
@@ -67,9 +68,9 @@ public class ProductController {
     @DeleteMapping("/products/{productId}")
     public ResponseEntity<String> deleteProductController(
             @PathVariable Long productId,
-            @AuthenticationPrincipal User userDetail) {
+            @AuthenticationPrincipal AuthUser user) {
 
-        productService.deleteProductService(productId, userDetail.getEmail());
+        productService.deleteProductService(productId, user.getUsername());
         return ResponseEntity.ok("상품이 삭제되었습니다.");
     }
 

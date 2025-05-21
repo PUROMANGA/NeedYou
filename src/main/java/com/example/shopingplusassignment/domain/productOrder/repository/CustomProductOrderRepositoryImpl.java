@@ -1,5 +1,6 @@
 package com.example.shopingplusassignment.domain.productOrder.repository;
 
+
 import com.example.shopingplusassignment.domain.cart.entity.QCart;
 import com.example.shopingplusassignment.domain.order.dto.ResponseSavedOrderListDto;
 import com.example.shopingplusassignment.domain.order.entity.QOrder;
@@ -27,7 +28,7 @@ public class CustomProductOrderRepositoryImpl implements CustomProductOrderRepos
     QProductOrder productOrder = QProductOrder.productOrder;
 
     @Override
-    public List<ResponseProductOrderDto> responseProductOrderDto(Long orderId) {
+    public List<ResponseProductOrderDto> findResponseProductOrderDtoByOrderId(Long orderId) {
 
         List<ResponseProductOrderDto> result = jpaQueryFactory
                 .select(Projections.constructor(ResponseProductOrderDto.class,
@@ -53,21 +54,20 @@ public class CustomProductOrderRepositoryImpl implements CustomProductOrderRepos
     }
 
     @Override
-    public Page<ResponseSavedOrderListDto> findByOrderId(Long orderId, Pageable pageable) {
+    public Page<ResponseSavedOrderListDto> findOrderPageByOrderId(Long orderId, Pageable pageable) {
 
         List<ResponseSavedOrderListDto> result = jpaQueryFactory
                 .select(Projections.constructor(ResponseSavedOrderListDto.class,
                         order,
-                        productOrder))
-                .from(productOrder)
-                .join(productOrder.order, order)
+                        order.creatTime,
+                        order.modifiedTime))
+                .from(order)
                 .where(order.id.eq(orderId))
                 .fetch();
 
         long total = jpaQueryFactory
                 .select(order.count())
-                .from(productOrder)
-                .join(productOrder.order, order)
+                .from(order)
                 .where(order.id.eq(orderId))
                 .fetchOne();
 

@@ -32,8 +32,7 @@ public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private Long stock;
-
-    @Column(nullable = false)
+    
     private Long rating;
 
     @Enumerated(EnumType.STRING)
@@ -51,7 +50,6 @@ public class Product extends BaseEntity {
         this.description = requestProductDto.getDescription();
         this.price = requestProductDto.getPrice();
         this.stock = requestProductDto.getStock();
-        this.rating = requestProductDto.getRating();
         this.productCategory = requestProductDto.getProductCategory();
         this.brand = brand;
         this.sellerId = sellerId;
@@ -62,7 +60,6 @@ public class Product extends BaseEntity {
         this.description = requestProductDto.getDescription();
         this.price = requestProductDto.getPrice();
         this.stock = requestProductDto.getStock();
-        this.rating = requestProductDto.getRating();
         this.productCategory = requestProductDto.getProductCategory();
     }
 
@@ -76,7 +73,6 @@ public class Product extends BaseEntity {
         this.description = requestProductDto.getDescription();
         this.price = requestProductDto.getPrice();
         this.stock = requestProductDto.getStock();
-        this.rating = requestProductDto.getRating();
         this.productCategory = requestProductDto.getProductCategory();
         this.brand = brand;
     }

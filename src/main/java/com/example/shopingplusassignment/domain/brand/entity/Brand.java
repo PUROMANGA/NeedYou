@@ -1,7 +1,9 @@
 package com.example.shopingplusassignment.domain.brand.entity;
 
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
+import com.example.shopingplusassignment.domain.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -17,10 +19,19 @@ public class Brand {
 
     private String name;
 
-    private Long bookmarkCount;
-
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private Seller seller;
+
+    public static Brand create(String name, Seller seller) {
+        Brand brand = new Brand();
+        brand.name = name;
+        brand.seller = seller;
+        return brand;
+    }
+
+    public void update(String name) {
+        this.name = name;
+    }
 
 }

@@ -21,11 +21,6 @@ public class RequestProductDto {
     @NotNull
     private Long stock;
 
-    @NotNull
-    private Long rating;
-
     @NotNull(message = "카테고리를 선택해주세요")
     private ProductCategory productCategory;
-
-    private String brandName;
 }
