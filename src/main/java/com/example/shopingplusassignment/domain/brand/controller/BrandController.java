@@ -81,7 +81,8 @@ public class BrandController {
             @PathVariable Long brandId,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        brandService.deleteBrand(brandId, authUser.getUser());
+        Long userId = authUser.getUser().getId();
+        brandService.deleteBrand(brandId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

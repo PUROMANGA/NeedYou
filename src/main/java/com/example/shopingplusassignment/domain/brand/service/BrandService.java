@@ -7,7 +7,6 @@ import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.brand.repository.BrandRepository;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
-import com.example.shopingplusassignment.domain.user.entity.User;
 import error.CustomRuntimeException;
 import error.ExceptionCode;
 
@@ -94,14 +93,21 @@ public class BrandService {
      * 브랜드 삭제 요청 서비스
      *
      * @param brandId 브랜드 정보 식별자
-     * @param user 현재 로그인 유저
+     * @param userId 현재 로그인 유저 식별자
      */
     @Transactional
     @Secured("ROLE_SELLER")
-    public void deleteBrand(Long brandId, User user) {
+    public void deleteBrand(Long brandId, Long userId) {
+
+        Seller seller = sellerRepository.findByUserId(userId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_CREATION));
 
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
+
+        if (!brand.getSeller().equals(seller)) {
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);
+        }
 
         brandRepository.delete(brand);
     }
