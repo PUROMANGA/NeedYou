@@ -24,8 +24,9 @@ public class SellerController {
     public ResponseEntity<SellerResponseDto> createSeller(
             @Valid @RequestBody StoreCreateRequestDto requestDto,
             @AuthenticationPrincipal AuthUser authUser
-            ) {
-        SellerResponseDto sellerResponseDto = sellerService.createSeller(requestDto, authUser.getUser());
+    ) {
+        Long userId = authUser.getUser().getId();
+        SellerResponseDto sellerResponseDto = sellerService.createSeller(requestDto, userId);
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.CREATED);
     }
 
