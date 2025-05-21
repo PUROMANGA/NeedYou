@@ -6,7 +6,6 @@ import com.example.shopingplusassignment.domain.seller.dto.response.SellerRespon
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
 import com.example.shopingplusassignment.domain.user.entity.User;
-import com.example.shopingplusassignment.domain.user.enums.UserRole;
 import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 import error.CustomRuntimeException;
 import error.ExceptionCode;

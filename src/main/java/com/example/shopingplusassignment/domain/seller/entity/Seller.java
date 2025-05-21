@@ -1,5 +1,6 @@
 package com.example.shopingplusassignment.domain.seller.entity;
 
+import base_entity.BaseEntity;
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.user.entity.User;
 import jakarta.persistence.*;
@@ -13,7 +14,7 @@ import java.util.List;
 @Getter
 @Table(name = "sellers")
 @NoArgsConstructor
-public class Seller {
+public class Seller extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
