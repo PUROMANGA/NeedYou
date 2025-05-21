@@ -33,10 +33,9 @@ public class SellerController {
     // 판매자 정보 조회
     @GetMapping("/{sellerId}")
     public ResponseEntity<SellerResponseDto> getSeller(
-            @PathVariable Long sellerId,
-            @AuthenticationPrincipal AuthUser authUser
+            @PathVariable Long sellerId
     ) {
-        SellerResponseDto sellerResponseDto = sellerService.getSeller(sellerId, authUser.getUser());
+        SellerResponseDto sellerResponseDto = sellerService.getSeller(sellerId);
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
     }
 
