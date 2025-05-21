@@ -50,12 +50,11 @@ public class BrandService {
      * 브랜드 조회 요청 서비스
      *
      * @param brandId 브랜드 정보 식별자
-     * @param user 현재 로그인 유저
      * @return 식별자에 해당하는 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
      */
     // 추후 브랜드 조회시 상품 리스트 같이 response 해주기
     @Transactional
-    public BrandResponseDto getBrand(Long brandId, User user) {
+    public BrandResponseDto getBrand(Long brandId) {
 
         Brand brand = brandRepository.findById(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));

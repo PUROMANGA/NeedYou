@@ -36,24 +36,21 @@ public class BrandController {
         return new ResponseEntity<>(brandResponseDto, HttpStatus.CREATED);
     }
 
-    // TODO 현재(5/21 15시 기준) seller만 조회 가능 -> user, seller 전부 접근 가능하게 변경 必
     /**
-     * 브랜드 조회 요청 컨트롤러
+     * 브랜드 조회 요청 컨트롤러 (로그인 없이 누구나 접근 가능)
      *
      * @param brandId 조회할 브랜드의 ID
-     * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
      * @return 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
      */
     @GetMapping("/{brandId}")
     private ResponseEntity<BrandResponseDto> getBrand(
-            @PathVariable Long brandId,
-            @AuthenticationPrincipal AuthUser authUser
+            @PathVariable Long brandId
     ) {
-        BrandResponseDto brandResponseDto = brandService.getBrand(brandId, authUser.getUser());
+        BrandResponseDto brandResponseDto = brandService.getBrand(brandId);
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 
-    // todo 여기 수정 !!!!!! CreateBrandRequestDto -> UpdateBrandRequestDto
+    // todo 여기 수정 !!!!!! CreateBrandRequestDto -> UpdateBrandRequestD
     /**
      * 브랜드 수정 요청 컨트롤러 (Seller 한정)
      *
