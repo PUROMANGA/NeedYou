@@ -50,10 +50,15 @@ public class SellerService {
     }
 
     @Transactional(readOnly = true)
-    public SellerResponseDto getSeller(Long sellerId) {
+    @Secured("ROLE_SELLER")
+    public SellerResponseDto getSeller(Long sellerId, Long userId) {
 
         Seller seller = sellerRepository.findByIdFetchUser(sellerId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
+
+        if (!seller.getUser().getId().equals(userId)) { //TODO N+1 ck
+            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
+        }
 
         return SellerResponseDto.of(seller);
     }
