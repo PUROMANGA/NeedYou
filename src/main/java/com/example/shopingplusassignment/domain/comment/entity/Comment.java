@@ -58,11 +58,12 @@ public class Comment extends BaseEntity {
 		this.description = dto.getDescription();
 		this.rating = dto.getRating();
 	}
-	public Comment(CommentRequestDto dto, Order order){
+	public Comment(CommentRequestDto dto, User user, Product product){
 		this.title = dto.getTitle();
 		this.description = dto.getDescription();
 		this.rating = dto.getRating();
-		this.user = order.getUser();
+		this.user = user;
+		this.product = product;
 
 	}
 	//TestCode 전용

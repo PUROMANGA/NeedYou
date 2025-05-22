@@ -20,6 +20,8 @@ import com.example.shopingplusassignment.domain.comment.entity.Comment;
 import com.example.shopingplusassignment.domain.comment.repository.CommentRepository;
 import com.example.shopingplusassignment.domain.order.entity.Order;
 import com.example.shopingplusassignment.domain.order.repository.OrderRepository;
+import com.example.shopingplusassignment.domain.product.entity.Product;
+import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
 
 import error.ExceptionCode;
 
@@ -28,6 +30,7 @@ import error.ExceptionCode;
 public class CommentServiceImpl implements CommentService {
 
 	private final CommentRepository commentRepository;
+	private final ProductRepository productRepository;
 	private final OrderRepository orderRepository;
 
 
@@ -39,14 +42,14 @@ public class CommentServiceImpl implements CommentService {
         if(!order.getUser().getId().equals(userId)){
 			throw  new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_REVIEW_ACCESS);
 		}
-		boolean notFound =order.getProductOrderList()
+		boolean notFound = order.getProductOrderList()
 			.stream()
-			.noneMatch(productOrder -> !productOrder.getProductId().equals(productId));
+			.noneMatch(po -> po.getProductId().equals(productId));
 		if(notFound){
 			throw  new CustomRuntimeException(ExceptionCode.PRODUCTORDER_NOT_FOUND);
 		}
-
-		Comment Comment = new Comment(dto, order);
+		Product findByProduct = productRepository.findById(productId).orElseThrow(()-> new CustomRuntimeException(ExceptionCode.PRODUCT_CANT_FIND));
+		Comment Comment = new Comment(dto, order.getUser(),findByProduct);
 		Comment saveComment = commentRepository.save(Comment);
 		return new CommentResponseDto(saveComment);
 	}
