@@ -60,6 +60,10 @@ public class SellerService {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
         }
 
+        if (seller.isWithdrawn()) {
+            throw new CustomRuntimeException(ExceptionCode.USER_ALREADY_DELETED);
+        }
+
         return SellerResponseDto.of(seller);
     }
 
@@ -98,7 +102,7 @@ public class SellerService {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
         }
 
-        sellerRepository.delete(seller);
+        seller.isClosed(); // 삭제 소프트 딜리트
     }
 
 }

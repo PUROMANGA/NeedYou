@@ -28,4 +28,9 @@ public class BaseEntity {
 
     @LastModifiedDate
     private LocalDateTime modifiedTime;
+
+    public void isClosed() {
+        this.withdrawn = true;
+    }
+
 }
