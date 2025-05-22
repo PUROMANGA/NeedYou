@@ -67,8 +67,6 @@ public class CommentServiceImpl implements CommentService {
 
 		Page<CommentGetInfoDto> commentResponseDtos = commentRepository.findCommentsByDynamicCondition(productId, min,  max, pageRequest);
 
-		commentResponseDtos.getContent().forEach(dto -> System.out.println("💬 " + dto));
-
 		return  commentResponseDtos.getContent();
 	}
 

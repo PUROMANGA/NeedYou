@@ -22,21 +22,21 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
 
 
 	QComment comment = QComment.comment;
-	QProduct product = QProduct.product;
 
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<CommentGetInfoDto> findCommentsByDynamicCondition( int min, int max, Pageable pageable) {
+	public Page<CommentGetInfoDto> findCommentsByDynamicCondition( Long productId,int min, int max, Pageable pageable) {
 
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(comment.rating.between(min, max));
 		builder.and(comment.deletedAt.isNull());
-
+		builder.and(comment.product.id.eq(productId));
 
 		List<Comment> results = queryFactory
 			.selectFrom(comment)
 			.where(
+				comment.product.id.eq(productId),
 				comment.rating.between(min, max),
 				comment.deletedAt.isNull()
 			).offset(pageable.getOffset())
