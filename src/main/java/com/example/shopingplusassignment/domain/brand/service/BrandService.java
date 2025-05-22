@@ -43,7 +43,6 @@ public class BrandService {
         brandRepository.save(brand);
 
         return BrandResponseDto.of(brand);
-
     }
 
     /**
@@ -56,7 +55,7 @@ public class BrandService {
     @Transactional(readOnly = true)
     public BrandResponseDto getBrand(Long brandId) {
 
-        Brand brand = brandRepository.findById(brandId)
+        Brand brand = brandRepository.findByIdFetchSeller(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
 
         return BrandResponseDto.of(brand);
@@ -74,15 +73,11 @@ public class BrandService {
     @Secured("ROLE_SELLER")
     public BrandResponseDto updateBrand(Long brandId, UpdateBrandRequestDto requestDto, Long userId) {
 
-        Seller seller = sellerRepository.findByUserId(userId)
-                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_CREATION));
-
-
-        Brand brand = brandRepository.findById(brandId)
+        Brand brand = brandRepository.findByIdFetchSeller(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
 
         // 본인 브랜드만 수정 가능
-        if (!brand.getSeller().equals(seller)) {
+        if (!brand.getSeller().getId().equals(userId)) {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);
         }
 
@@ -101,13 +96,10 @@ public class BrandService {
     @Secured("ROLE_SELLER")
     public void deleteBrand(Long brandId, Long userId) {
 
-        Seller seller = sellerRepository.findByUserId(userId)
-                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_CREATION));
-
-        Brand brand = brandRepository.findById(brandId)
+        Brand brand = brandRepository.findByIdFetchSeller(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
 
-        if (!brand.getSeller().equals(seller)) {
+        if (!brand.getSeller().getId().equals(userId)) {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);
         }
 

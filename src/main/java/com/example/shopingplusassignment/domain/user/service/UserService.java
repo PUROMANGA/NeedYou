@@ -9,12 +9,11 @@ import com.example.shopingplusassignment.domain.user.dto.response.UserResponse;
 import com.example.shopingplusassignment.domain.user.entity.User;
 import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service

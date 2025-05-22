@@ -29,6 +29,7 @@ public enum ExceptionCode implements ErrorCode {
 
     // 판매자 정보
     UNAUTHORIZED_SELLER_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+    SELLER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "셀러 정보는 하나만 등록할 수 있습니다."),
 
     // 브랜드
     UNAUTHORIZED_BRAND_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
