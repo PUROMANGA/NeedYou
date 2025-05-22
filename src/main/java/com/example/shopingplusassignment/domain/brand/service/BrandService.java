@@ -15,6 +15,9 @@ import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class BrandService {
@@ -45,8 +48,23 @@ public class BrandService {
         return BrandResponseDto.of(brand);
     }
 
+    // 모든 브랜드 조회
+    @Transactional(readOnly = true)
+    public List<BrandResponseDto> getAllBrands() {
+
+        List<Brand> brandList = brandRepository.findAllByWithdrawnIsFalse();
+
+        List<BrandResponseDto> brandResponseDtoList = new ArrayList<>();
+        for (Brand brand : brandList) {
+            BrandResponseDto dto = BrandResponseDto.of(brand);
+            brandResponseDtoList.add(dto);
+        }
+
+        return brandResponseDtoList;
+    }
+
     /**
-     * 브랜드 조회 요청 서비스
+     * 브랜드 개별 조회 요청 서비스
      *
      * @param brandId 브랜드 정보 식별자
      * @return 식별자에 해당하는 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
