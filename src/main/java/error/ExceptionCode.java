@@ -14,9 +14,7 @@ public enum ExceptionCode implements ErrorCode {
     USER_CANT_FIND(HttpStatus.BAD_REQUEST, "유저를 찾을 수 없습니다"),
     PRODUCT_CANT_FIND(HttpStatus.BAD_REQUEST, "상품을 찾을 수 없습니다"),
     SELLER_NOT_FOUND(HttpStatus.NOT_FOUND, "판매자를 찾을 수 없습니다."),
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을수 없습니다."),
-    ORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문을 찾을 수 없습니다."),
-    PRODUCTORDER_NOT_FOUND(HttpStatus.NOT_FOUND, "주문 내 일치하는 상품이 존재하지 않습니다."),
+
 
     // 배송지 정보
     ADDRESS_NOT_FOUND(HttpStatus.NOT_FOUND, "배송지 정보를 찾을 수 없습니다"),
@@ -31,6 +29,10 @@ public enum ExceptionCode implements ErrorCode {
     UNAUTHORIZED_SELLER_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
 
     // 브랜드
+    UNAUTHORIZED_BRAND_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
+    UNAUTHORIZED_BRAND_CREATION(HttpStatus.FORBIDDEN, "판매자 등록이 되어있지 않은 사용자입니다.");
+
+
     UNAUTHORIZED_BRAND_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
     //리뷰
     UNAUTHORIZED_REVIEW_ACCESS(HttpStatus.FORBIDDEN,"주문자와 유저가 일치 하지 않습니다."),
