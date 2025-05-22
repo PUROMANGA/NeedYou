@@ -34,7 +34,8 @@ public enum ExceptionCode implements ErrorCode {
     UNAUTHORIZED_BRAND_ACCESS(HttpStatus.FORBIDDEN, "접근 권한이 없습니다."),
     //리뷰
     UNAUTHORIZED_REVIEW_ACCESS(HttpStatus.FORBIDDEN,"주문자와 유저가 일치 하지 않습니다."),
-    PAYMENT_REQUIRED(HttpStatus.BAD_REQUEST, "상품 배송 전입니다.");
+    PAYMENT_REQUIRED(HttpStatus.BAD_REQUEST, "상품 배송 전입니다."),
+    UNAUTHORIZED_COMMENT_DELETE(HttpStatus.FORBIDDEN, "본인이 작성한 댓글만 삭제할 수 있습니다.");
     private final HttpStatus httpStatus;
     private final String message;
 
