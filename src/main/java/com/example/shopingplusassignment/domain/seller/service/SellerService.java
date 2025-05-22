@@ -1,37 +1,39 @@
 package com.example.shopingplusassignment.domain.seller.service;
 
-import com.example.shopingplusassignment.domain.seller.dto.request.StoreCreateRequestDto;
-import com.example.shopingplusassignment.domain.seller.dto.request.updateSellerRequestDto;
+import com.example.shopingplusassignment.domain.seller.dto.request.CreateStoreRequestDto;
+import com.example.shopingplusassignment.domain.seller.dto.request.UpdateSellerRequestDto;
 import com.example.shopingplusassignment.domain.seller.dto.response.SellerResponseDto;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
 import com.example.shopingplusassignment.domain.user.entity.User;
-import com.example.shopingplusassignment.domain.user.enums.UserRole;
+import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 import error.CustomRuntimeException;
 import error.ExceptionCode;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SellerService {
 
     private final SellerRepository sellerRepository;
-
-    // todo 접근 권한, 로그인 여부 추가
+    private final UserRepository userRepository;
 
     @Transactional
-    public SellerResponseDto createSeller(StoreCreateRequestDto requestDto, User user) {
+    @Secured("ROLE_SELLER")
+    public SellerResponseDto createSeller(CreateStoreRequestDto requestDto, Long userId) {
 
-        // 로그인한 사람의 userrole이 seller인지 확인
-        if (user.getUserRole() != UserRole.SELLER) {
-            throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
+        // 로그인으로 발급된 토큰에서 userId 정보 가져옴 -> user 리포지토리에서 해당 id 찾아 비교 후 있으면 유저 가져와, 없으면
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
+
+        if (sellerRepository.existsByUserId(userId)) {
+            throw new CustomRuntimeException(ExceptionCode.SELLER_ALREADY_EXISTS);
         }
 
+        // 셀러 생성 (request로 받아온 정보 , 유저)
         Seller seller = Seller.createSeller(
                 requestDto.getCompanyName(),
                 requestDto.getCeoName(),
@@ -48,27 +50,30 @@ public class SellerService {
     }
 
     @Transactional(readOnly = true)
-    public SellerResponseDto getSeller(Long sellerId, User user) {
+    @Secured("ROLE_SELLER")
+    public SellerResponseDto getSeller(Long sellerId, Long userId) {
 
-        if (user.getUserRole() != UserRole.SELLER) {
+        Seller seller = sellerRepository.findByIdFetchUser(sellerId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
+
+        if (!seller.getUser().getId().equals(userId)) { //TODO N+1 ck
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
         }
-
-        Seller seller = sellerRepository.findById(sellerId)
-                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
 
         return SellerResponseDto.of(seller);
     }
 
     @Transactional
-    public SellerResponseDto updateSeller(Long sellerId, updateSellerRequestDto updateSellerRequestDto, User user) {
+    @Secured("ROLE_SELLER")
+    public SellerResponseDto updateSeller(Long sellerId, UpdateSellerRequestDto updateSellerRequestDto, Long userId) {
 
-        if (user.getUserRole() != UserRole.SELLER) {
+        Seller seller = sellerRepository.findByIdFetchUser(sellerId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
+
+        // 본인의 seller 정보만 수정 가능
+        if (!seller.getUser().getId().equals(userId)) {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
         }
-
-        Seller seller = sellerRepository.findById(sellerId)
-                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
 
         seller.update(
                 updateSellerRequestDto.getCompanyName(),
@@ -83,14 +88,15 @@ public class SellerService {
     }
 
     @Transactional
-    public void deleteSeller(Long sellerId, User user) {
+    @Secured("ROLE_SELLER")
+    public void deleteSeller(Long sellerId, Long userId) {
 
-        if (user.getUserRole() != UserRole.SELLER) {
+        Seller seller = sellerRepository.findByIdFetchUser(sellerId)
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
+
+        if (!seller.getUser().getId().equals(userId)) {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_SELLER_ACCESS);
         }
-
-        Seller seller = sellerRepository.findById(sellerId)
-                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.SELLER_NOT_FOUND));
 
         sellerRepository.delete(seller);
     }

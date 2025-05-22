@@ -1,8 +1,8 @@
 package com.example.shopingplusassignment.domain.seller.controller;
 
 import com.example.shopingplusassignment.domain.common.dto.AuthUser;
-import com.example.shopingplusassignment.domain.seller.dto.request.StoreCreateRequestDto;
-import com.example.shopingplusassignment.domain.seller.dto.request.updateSellerRequestDto;
+import com.example.shopingplusassignment.domain.seller.dto.request.CreateStoreRequestDto;
+import com.example.shopingplusassignment.domain.seller.dto.request.UpdateSellerRequestDto;
 import com.example.shopingplusassignment.domain.seller.dto.response.SellerResponseDto;
 import com.example.shopingplusassignment.domain.seller.service.SellerService;
 import jakarta.validation.Valid;
@@ -22,10 +22,11 @@ public class SellerController {
     // 판매자 정보 등록
     @PostMapping
     public ResponseEntity<SellerResponseDto> createSeller(
-            @Valid @RequestBody StoreCreateRequestDto requestDto,
+            @Valid @RequestBody CreateStoreRequestDto requestDto,
             @AuthenticationPrincipal AuthUser authUser
-            ) {
-        SellerResponseDto sellerResponseDto = sellerService.createSeller(requestDto, authUser.getUser());
+    ) {
+        Long userId = authUser.getUser().getId();
+        SellerResponseDto sellerResponseDto = sellerService.createSeller(requestDto, userId);
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.CREATED);
     }
 
@@ -35,7 +36,8 @@ public class SellerController {
             @PathVariable Long sellerId,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        SellerResponseDto sellerResponseDto = sellerService.getSeller(sellerId, authUser.getUser());
+        Long userId = authUser.getUser().getId();
+        SellerResponseDto sellerResponseDto = sellerService.getSeller(sellerId, userId);
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
     }
 
@@ -43,10 +45,11 @@ public class SellerController {
     @PutMapping("/{sellerId}")
     public ResponseEntity<SellerResponseDto> updateSeller(
             @PathVariable Long sellerId,
-            @Valid @RequestBody updateSellerRequestDto updateSellerRequestDto,
+            @Valid @RequestBody UpdateSellerRequestDto updateSellerRequestDto,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        SellerResponseDto sellerResponseDto = sellerService.updateSeller(sellerId, updateSellerRequestDto, authUser.getUser());
+        Long userId = authUser.getUser().getId();
+        SellerResponseDto sellerResponseDto = sellerService.updateSeller(sellerId, updateSellerRequestDto, userId);
         return new ResponseEntity<>(sellerResponseDto, HttpStatus.OK);
     }
 
@@ -56,7 +59,8 @@ public class SellerController {
             @PathVariable Long sellerId,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        sellerService.deleteSeller(sellerId, authUser.getUser());
+        Long userId = authUser.getUser().getId();
+        sellerService.deleteSeller(sellerId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
