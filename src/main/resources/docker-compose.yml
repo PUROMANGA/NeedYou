@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+
+  nbc-15-redis:
+    image: redis:7.2
+    ports:
+      - '6379:6379'
+    volumes:
+      - nbc-15_redis_volume:/data
+    command: redis-server --requirepass 1234 --appendonly yes
+
+volumes:
+  nbc-15_mysql_volume:
+  nbc-15_redis_volume:
