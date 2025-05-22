@@ -3,6 +3,7 @@ package com.example.shopingplusassignment.domain.brand.controller;
 import com.example.shopingplusassignment.domain.brand.dto.request.CreateBrandRequestDto;
 import com.example.shopingplusassignment.domain.brand.dto.request.UpdateBrandRequestDto;
 import com.example.shopingplusassignment.domain.brand.dto.response.BrandResponseDto;
+import com.example.shopingplusassignment.domain.brand.dto.response.DetailBrandResponseDto;
 import com.example.shopingplusassignment.domain.brand.service.BrandService;
 import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 import jakarta.validation.Valid;
@@ -49,13 +50,13 @@ public class BrandController {
      * 브랜드 개별 조회 요청 컨트롤러 (로그인 없이 누구나 접근 가능)
      *
      * @param brandId 조회할 브랜드의 ID
-     * @return 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
+     * @return 브랜드 정보가 담긴 {@link DetailBrandResponseDto} 객체
      */
     @GetMapping("/{brandId}")
-    private ResponseEntity<BrandResponseDto> getBrand(
+    private ResponseEntity<DetailBrandResponseDto> getBrand(
             @PathVariable Long brandId
     ) {
-        BrandResponseDto brandResponseDto = brandService.getBrand(brandId);
+        DetailBrandResponseDto brandResponseDto = brandService.getBrand(brandId);
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 

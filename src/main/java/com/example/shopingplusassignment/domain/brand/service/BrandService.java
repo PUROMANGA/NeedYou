@@ -3,8 +3,12 @@ package com.example.shopingplusassignment.domain.brand.service;
 import com.example.shopingplusassignment.domain.brand.dto.request.CreateBrandRequestDto;
 import com.example.shopingplusassignment.domain.brand.dto.request.UpdateBrandRequestDto;
 import com.example.shopingplusassignment.domain.brand.dto.response.BrandResponseDto;
+import com.example.shopingplusassignment.domain.brand.dto.response.DetailBrandResponseDto;
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.brand.repository.BrandRepository;
+import com.example.shopingplusassignment.domain.product.dto.ForBrandProductResponseDto;
+import com.example.shopingplusassignment.domain.product.dto.ResponseProductDto;
+import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
 import error.CustomRuntimeException;
@@ -17,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -71,16 +76,20 @@ public class BrandService {
      */
     // 추후 브랜드 조회시 상품 리스트 같이 response 해주기
     @Transactional(readOnly = true)
-    public BrandResponseDto getBrand(Long brandId) {
+    public DetailBrandResponseDto getBrand(Long brandId) { // 브랜드 id 받아와서
 
-        Brand brand = brandRepository.findByIdFetchSeller(brandId)
+        Brand brand = brandRepository.findByIdFetchSellerAndProducts(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
 
         if (brand.isWithdrawn()) {
             throw new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND);
         }
 
-        return BrandResponseDto.of(brand);
+        List<ForBrandProductResponseDto> forBrandProductResponseDtoList = brand.getProductList().stream()
+                .map(ForBrandProductResponseDto::of)
+                .collect(Collectors.toList());
+
+        return DetailBrandResponseDto.of(brand, forBrandProductResponseDtoList);
     }
 
     /**

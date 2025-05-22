@@ -1,12 +1,14 @@
 package com.example.shopingplusassignment.domain.brand.entity;
 
 import base_entity.BaseEntity;
+import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
-import com.example.shopingplusassignment.domain.user.entity.User;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -23,6 +25,9 @@ public class Brand extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "seller_id")
     private Seller seller;
+
+    @OneToMany(mappedBy = "brand", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Product> productList = new ArrayList<>();
 
     public static Brand create(String name, Seller seller) {
         Brand brand = new Brand();
