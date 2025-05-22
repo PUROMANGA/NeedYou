@@ -58,6 +58,10 @@ public class BrandService {
         Brand brand = brandRepository.findByIdFetchSeller(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
 
+        if (brand.isWithdrawn()) {
+            throw new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND);
+        }
+
         return BrandResponseDto.of(brand);
     }
 
@@ -103,7 +107,7 @@ public class BrandService {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);
         }
 
-        brandRepository.delete(brand);
+        brand.isClosed();
     }
 
 }
