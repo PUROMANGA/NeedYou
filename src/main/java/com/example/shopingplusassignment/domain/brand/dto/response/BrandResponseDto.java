@@ -1,7 +1,6 @@
-package com.example.shopingplusassignment.domain.brand.dto;
+package com.example.shopingplusassignment.domain.brand.dto.response;
 
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
-import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

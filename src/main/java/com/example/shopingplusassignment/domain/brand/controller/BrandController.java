@@ -1,10 +1,10 @@
 package com.example.shopingplusassignment.domain.brand.controller;
 
-import com.example.shopingplusassignment.domain.brand.dto.BrandCreateRequestDto;
-import com.example.shopingplusassignment.domain.brand.dto.BrandResponseDto;
+import com.example.shopingplusassignment.domain.brand.dto.request.CreateBrandRequestDto;
+import com.example.shopingplusassignment.domain.brand.dto.request.UpdateBrandRequestDto;
+import com.example.shopingplusassignment.domain.brand.dto.response.BrandResponseDto;
 import com.example.shopingplusassignment.domain.brand.service.BrandService;
 import com.example.shopingplusassignment.domain.common.dto.AuthUser;
-import com.example.shopingplusassignment.domain.user.enums.UserRole;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,40 +19,70 @@ public class BrandController {
 
     private final BrandService brandService;
 
+    /**
+     * 브랜드 생성 요청 컨트롤러 (Seller 한정)
+     *
+     * @param requestDto 브랜드 생성 요청 정보가 담긴 {@link CreateBrandRequestDto} 객체
+     * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+     * @return 생성된 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
+     */
     @PostMapping
     private ResponseEntity<BrandResponseDto> createBrand(
-            @Valid @RequestBody BrandCreateRequestDto requestDto,
+            @Valid @RequestBody CreateBrandRequestDto requestDto,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        BrandResponseDto brandResponseDto = brandService.createBrand(requestDto, authUser.getUser());
+        Long userId = authUser.getUser().getId();
+        BrandResponseDto brandResponseDto = brandService.createBrand(requestDto, userId);
         return new ResponseEntity<>(brandResponseDto, HttpStatus.CREATED);
     }
 
+    /**
+     * 브랜드 조회 요청 컨트롤러 (로그인 없이 누구나 접근 가능)
+     *
+     * @param brandId 조회할 브랜드의 ID
+     * @return 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
+     */
     @GetMapping("/{brandId}")
     private ResponseEntity<BrandResponseDto> getBrand(
-            @PathVariable Long brandId,
-            @AuthenticationPrincipal AuthUser authUser
+            @PathVariable Long brandId
     ) {
-        BrandResponseDto brandResponseDto = brandService.getBrand(brandId, authUser.getUser());
+        BrandResponseDto brandResponseDto = brandService.getBrand(brandId);
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 
+    /**
+     * 브랜드 수정 요청 컨트롤러 (Seller 한정)
+     *
+     * @param brandId　조회할 브랜드의 ID
+     * @param requestDto　브랜드 수정 요청 정보가 담긴 {@link UpdateBrandRequestDto} 객체
+     * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+     * @return 수정된 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
+     */
     @PutMapping("/{brandId}")
     private ResponseEntity<BrandResponseDto> updateBrand(
             @PathVariable Long brandId,
-            @Valid @RequestBody BrandCreateRequestDto requestDto,
+            @Valid @RequestBody UpdateBrandRequestDto requestDto,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        BrandResponseDto brandResponseDto = brandService.updateBrand(brandId, requestDto, authUser.getUser());
+        Long userId = authUser.getUser().getId();
+        BrandResponseDto brandResponseDto = brandService.updateBrand(brandId, requestDto, userId);
         return new ResponseEntity<>(brandResponseDto, HttpStatus.OK);
     }
 
+    /**
+     * 브랜드 삭제 요청 컨트롤러 (Seller 한정)
+     *
+     * @param brandId 조회할 브랜드의 ID
+     * @param authUser 로그인 토큰 정보가 담긴 {@link AuthUser} 객체
+     * @return 메세지 응답, 성공 - 200
+     */
     @DeleteMapping("/{brandId}")
     public ResponseEntity<Void> deleteBrand(
             @PathVariable Long brandId,
             @AuthenticationPrincipal AuthUser authUser
     ) {
-        brandService.deleteBrand(brandId, authUser.getUser());
+        Long userId = authUser.getUser().getId();
+        brandService.deleteBrand(brandId, userId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
