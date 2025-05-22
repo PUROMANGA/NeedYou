@@ -16,9 +16,8 @@ public class SignupResponseDto {
     private final UserRole userRole;
     private final LocalDateTime createdAt;
     private final LocalDateTime modifiedAt;
-    private final String bearerToken;
 
-    public SignupResponseDto(Long id, String name, String email, String phone, UserRole userRole, LocalDateTime createdAt, LocalDateTime modifiedAt, String bearerToken) {
+    public SignupResponseDto(Long id, String name, String email, String phone, UserRole userRole, LocalDateTime createdAt, LocalDateTime modifiedAt) {
         this.id = id;
         this.name = name;
         this.email = email;
@@ -26,6 +25,5 @@ public class SignupResponseDto {
         this.userRole = userRole;
         this.createdAt = createdAt;
         this.modifiedAt = modifiedAt;
-        this.bearerToken = bearerToken;
     }
 }
