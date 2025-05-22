@@ -1,6 +1,6 @@
 package com.example.shopingplusassignment.domain.order.entity;
 
-import base_entity.BaseEntity;
+import com.example.shopingplusassignment.base_entity.BaseEntity;
 import com.example.shopingplusassignment.domain.order.common.OrderStatus;
 import com.example.shopingplusassignment.domain.productOrder.entity.ProductOrder;
 import com.example.shopingplusassignment.domain.user.entity.User;
@@ -39,6 +39,14 @@ public class Order extends BaseEntity {
     public Order(User user, Long addressId) {
         this.user = user;
         this.addressId = addressId;
+    }
+
+    public Order(Order order, List<ProductOrder> productOrderList) {
+        this.id = order.getId();
+        this.user = order.getUser();
+        this.addressId = order.getAddressId();
+        this.orderStatus = order.getOrderStatus();
+        this.productOrderList = productOrderList;
     }
 
     public void changeOrderStatus(OrderStatus orderStatus) {
