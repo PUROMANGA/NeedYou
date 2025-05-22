@@ -17,16 +17,16 @@ public class User extends BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+    private String password;
     @Column(unique = true)
     private String email;
-    private String password;
     private String phone;
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
     @Column(nullable = false)
     private boolean status = false;
 
-    public User(String name, String email, String password, String phone, UserRole userRole) {
+    public User(String name, String email, String password,  String phone, UserRole userRole) {
         this.name = name;
         this.email = email;
         this.password = password;
@@ -42,4 +42,5 @@ public class User extends BaseEntity {
     public void updatePassword(String newPassword){
         this.password = newPassword;
     }
+
 }
