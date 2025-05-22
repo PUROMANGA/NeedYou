@@ -11,6 +11,8 @@ import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
+import com.example.shopingplusassignment.domain.user.entity.User;
+import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 import com.example.shopingplusassignment.error.CustomRuntimeException;
 import com.example.shopingplusassignment.error.ExceptionCode;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +37,7 @@ public class ProductService {
     private final ProductCache productCache;
     private final PopularKeywordSetting popularKeywordSetting;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final UserRepository userRepository;
 
     /**
      * 로그인된 판매자의 email로 seller 객체를 찾아주고, brandId로 brand를 찾아준다음, product 객체에 저장시키고, db에도 저장합니다.
@@ -47,7 +50,9 @@ public class ProductService {
 
     @Transactional
     public ResponseProductDto postProductService(RequestProductDto requestProductDto, Long brandId, String email) {
-        Seller seller = sellerRepository.findByEmail(email);
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
+        Long userId = user.getId();
+        Seller seller = sellerRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("셀러가 없습니다"));
         Brand brand = brandRepository.findById(brandId).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
         Product product = new Product(requestProductDto, brand, seller.getId());
         return new ResponseProductDto(productRepository.save(product));
