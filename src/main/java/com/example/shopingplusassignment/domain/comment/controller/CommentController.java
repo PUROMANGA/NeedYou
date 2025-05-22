@@ -28,7 +28,6 @@ import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 @RequiredArgsConstructor
 public class CommentController {
 	private final CommentServiceImpl commentService;
-	private final CommentRepository commentRepository;
 
 	@PostMapping
 	public ResponseEntity<CommentResponseDto> saveComment(
@@ -41,22 +40,21 @@ public class CommentController {
 
 	@GetMapping
 	public ResponseEntity<List<CommentGetInfoDto>> findByCommentRating(
-		@RequestParam(required = false) Long productId,
+		@RequestParam Long productId,
 		@RequestParam(defaultValue = "0")int min,
 		@RequestParam(defaultValue = "5") int max,
 		@RequestParam(defaultValue = "0") int page,
 		@RequestParam(defaultValue = "10") int size
 	) {
-		return new ResponseEntity<>(commentService.getCommentByRating(min, max, page, size), HttpStatus.OK);
+		return new ResponseEntity<>(commentService.getCommentByRating(productId, min, max, page, size), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{reviewId}")
 	public ResponseEntity<CommentMessageResponseDto> DeleteComment(
-		@RequestParam Long orderId,
 		@RequestParam Long productId,
 		@PathVariable Long reviewId,
 		@AuthenticationPrincipal AuthUser authUser
 	){
-		return new ResponseEntity<>(commentService.deleteComment( orderId, productId, authUser.getUser().getId(), reviewId), HttpStatus.OK);
+		return new ResponseEntity<>(commentService.deleteComment( productId, authUser.getUser().getId(), reviewId), HttpStatus.OK);
 	}
 }
