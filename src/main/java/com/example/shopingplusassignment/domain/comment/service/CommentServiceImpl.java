@@ -76,10 +76,10 @@ public class CommentServiceImpl implements CommentService {
 	public CommentMessageResponseDto deleteComment(Long productId, Long userId, Long reviewId) {
 
 		Comment getComment = commentRepository.findByIdAndDeletedAtIsNull(reviewId)
-			.orElseThrow(()-> new RuntimeException("리뷰가 존재하지 않습니다."));
+			.orElseThrow(()-> new CustomRuntimeException(ExceptionCode. COMMENT_NOT_FOUND));
 
 		if (!getComment.getUser().getId().equals(userId)) {
-			throw new RuntimeException("본인이 작성한 댓글만 삭제할 수 있습니다.");
+			throw new CustomRuntimeException(ExceptionCode. UNAUTHORIZED_COMMENT_DELETE);
 		}
 
 		getComment.markAsDeleted(true, LocalDateTime.now());
