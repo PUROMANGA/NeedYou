@@ -18,6 +18,7 @@ import com.example.shopingplusassignment.domain.comment.dto.CommentRequestDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
 import com.example.shopingplusassignment.domain.comment.entity.Comment;
 import com.example.shopingplusassignment.domain.comment.repository.CommentRepository;
+import com.example.shopingplusassignment.domain.order.common.OrderStatus;
 import com.example.shopingplusassignment.domain.order.entity.Order;
 import com.example.shopingplusassignment.domain.order.repository.OrderRepository;
 import com.example.shopingplusassignment.domain.product.entity.Product;
@@ -41,6 +42,9 @@ public class CommentServiceImpl implements CommentService {
 		Order order = orderRepository.findById(orderId).orElseThrow();
         if(!order.getUser().getId().equals(userId)){
 			throw  new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_REVIEW_ACCESS);
+		}
+		if(order.getOrderStatus().equals(OrderStatus.PENDING)){
+			throw  new CustomRuntimeException(ExceptionCode.PAYMENT_REQUIRED);
 		}
 		boolean notFound = order.getProductOrderList()
 			.stream()
