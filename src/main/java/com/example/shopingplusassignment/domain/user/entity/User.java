@@ -33,4 +33,13 @@ public class User extends BaseEntity {
         this.phone = phone;
         this.userRole = userRole;
     }
+
+    public void userUpdate(String name, String phone){
+        this.name = name;
+        this.phone = phone;
+    }
+
+    public void updatePassword(String newPassword){
+        this.password = newPassword;
+    }
 }
