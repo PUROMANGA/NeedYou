@@ -39,6 +39,7 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = jwtUtil.resolveToken(request);
 
         if(token != null && jwtUtil.validateToken(token)){
+
             try{
                 Claims claims = jwtUtil.extractClaims(token);
                 String email = claims.getSubject();
