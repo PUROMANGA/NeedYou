@@ -2,6 +2,9 @@ package com.example.shopingplusassignment.domain.product.service;
 
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.brand.repository.BrandRepository;
+import com.example.shopingplusassignment.domain.product.ProductCache;
+import com.example.shopingplusassignment.domain.product.common.PopularKeywordSetting;
+import com.example.shopingplusassignment.domain.product.common.ProductCategory;
 import com.example.shopingplusassignment.domain.product.dto.RequestProductDto;
 import com.example.shopingplusassignment.domain.product.dto.ResponseProductDto;
 import com.example.shopingplusassignment.domain.product.entity.Product;
@@ -10,22 +13,32 @@ import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
 import com.example.shopingplusassignment.domain.user.entity.User;
 import com.example.shopingplusassignment.domain.user.repository.UserRepository;
-import error.CustomRuntimeException;
-import error.ExceptionCode;
+import com.example.shopingplusassignment.error.CustomRuntimeException;
+import com.example.shopingplusassignment.error.ExceptionCode;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.*;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 
 public class ProductService {
 
     private final ProductRepository productRepository;
     private final BrandRepository brandRepository;
     private final SellerRepository sellerRepository;
+    private final ProductCache productCache;
+    private final PopularKeywordSetting popularKeywordSetting;
+    private final RedisTemplate<String, Object> redisTemplate;
     private final UserRepository userRepository;
 
     /**
@@ -109,10 +122,65 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Slice<ResponseProductDto> searchProductService(String keyword, Pageable pageable) {
+        productCache.savedKeywordByCounting(keyword);
         Slice<ResponseProductDto> findProductByKeyword = productRepository.findByKeyword(keyword, pageable);
         if(findProductByKeyword.isEmpty()) {
             throw new RuntimeException("검색 결과가 없습니다");
         }
         return findProductByKeyword;
+    }
+
+
+    @Transactional(readOnly = true)
+    public Slice<ResponseProductDto> searchProductServicePopularProductCategory(Pageable pageable) {
+        long start = System.currentTimeMillis();
+        Slice<ResponseProductDto> foundCoolerByProductCategory = productCache.getProductCategory(pageable);
+        if(foundCoolerByProductCategory.isEmpty()) {
+            throw new RuntimeException("검색 결과가 없습니다");
+        }
+        long end = System.currentTimeMillis();
+        log.info("캐싱 조회 시간: {}ms",(end - start));
+        return foundCoolerByProductCategory;
+    }
+
+    @Transactional(readOnly = true)
+    public Slice<ResponseProductDto> searchProductServicePopularProductCategoryNormal(Pageable pageable) {
+        long start = System.currentTimeMillis();
+        Slice<ResponseProductDto> foundCoolerByProductCategory = productRepository.findProductByProductCategory(ProductCategory.COOLER, pageable);
+        if(foundCoolerByProductCategory.isEmpty()) {
+            throw new RuntimeException("검색 결과가 없습니다");
+        }
+        long end = System.currentTimeMillis();
+        log.info("DB 조회 시간: {}ms",(end - start));
+        return foundCoolerByProductCategory;
+    }
+
+    /**
+     * 인기 검색어 api
+     */
+
+    @Transactional(readOnly = true)
+    public List<String> getPopularKeyword() {
+        List<String> getPopularKeyword = popularKeywordSetting.getPopularKeyword();
+        return getPopularKeyword;
+    }
+
+    /**
+     * 인기 검색어로 조회된 값을 줌
+     */
+    @Transactional(readOnly = true)
+    public Slice<ResponseProductDto> getPopularProductsByKeyword(String keyword, int page, int size) {
+        Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
+        Pageable pageable = PageRequest.of(page, size, sort);
+        if(page == 0) {
+            Object object = redisTemplate.opsForValue().get("PopularProducts:" + keyword + ":slice:0");
+
+            @SuppressWarnings("unchecked")
+            List<ResponseProductDto> responseProductDto = (List<ResponseProductDto>) object;
+
+            boolean hasNext = responseProductDto.size() > size;
+            return new SliceImpl<>(responseProductDto.subList(0, Math.min(size, responseProductDto.size())), PageRequest.of(0, size), hasNext);
+        }
+        return productRepository.findByKeyword(keyword, pageable);
     }
 }

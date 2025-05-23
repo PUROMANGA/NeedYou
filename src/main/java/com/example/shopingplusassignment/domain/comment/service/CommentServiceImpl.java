@@ -1,10 +1,10 @@
 package com.example.shopingplusassignment.domain.comment.service;
 
-import error.CustomRuntimeException;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.example.shopingplusassignment.error.CustomRuntimeException;
+import com.example.shopingplusassignment.error.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -23,8 +23,6 @@ import com.example.shopingplusassignment.domain.order.entity.Order;
 import com.example.shopingplusassignment.domain.order.repository.OrderRepository;
 import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
-
-import error.ExceptionCode;
 
 @Service
 @RequiredArgsConstructor

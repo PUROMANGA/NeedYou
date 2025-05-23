@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
-public interface CartRepository extends JpaRepository<Cart, Long> {
+public interface CartRepository extends JpaRepository<Cart, Long>, CustomCartRepository {
     List<Cart> findAllByUserId(Long userId);
 
     @Query("select new com.example.shopingplusassignment.domain.cart.dto.CartProductDto(" +

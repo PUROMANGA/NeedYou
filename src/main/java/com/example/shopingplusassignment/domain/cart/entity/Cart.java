@@ -1,6 +1,6 @@
 package com.example.shopingplusassignment.domain.cart.entity;
 
-import base_entity.BaseEntity;
+import com.example.shopingplusassignment.base_entity.BaseEntity;
 import com.example.shopingplusassignment.domain.cart.dto.CartRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

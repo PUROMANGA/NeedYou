@@ -1,4 +1,4 @@
-package error;
+package com.example.shopingplusassignment.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

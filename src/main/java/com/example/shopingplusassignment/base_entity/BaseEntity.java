@@ -1,4 +1,4 @@
-package base_entity;
+package com.example.shopingplusassignment.base_entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
