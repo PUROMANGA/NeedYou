@@ -1,9 +1,9 @@
 package com.example.shopingplusassignment.domain.comment.entity;
 
-import base_entity.BaseEntity;
 
 import java.time.LocalDateTime;
 
+import com.example.shopingplusassignment.base_entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

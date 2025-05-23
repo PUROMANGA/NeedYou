@@ -7,8 +7,8 @@ import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.brand.repository.BrandRepository;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
-import error.CustomRuntimeException;
-import error.ExceptionCode;
+import com.example.shopingplusassignment.error.CustomRuntimeException;
+import com.example.shopingplusassignment.error.ExceptionCode;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.annotation.Secured;

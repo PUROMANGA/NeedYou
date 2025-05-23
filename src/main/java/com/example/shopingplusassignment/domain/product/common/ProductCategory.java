@@ -5,5 +5,5 @@ import lombok.Getter;
 @Getter
 
 public enum ProductCategory {
-    GAME, CLOTHES, ACCESSORIES;
+    GAME, CLOTHES, ACCESSORIES, COOLER;
 }

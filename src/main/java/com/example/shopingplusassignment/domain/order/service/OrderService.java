@@ -3,6 +3,7 @@ package com.example.shopingplusassignment.domain.order.service;
 import com.example.shopingplusassignment.domain.address.entity.Address;
 import com.example.shopingplusassignment.domain.address.repository.AddressRepository;
 import com.example.shopingplusassignment.domain.cart.dto.CartProductDto;
+import com.example.shopingplusassignment.domain.cart.dto.CartResponseOrderDto;
 import com.example.shopingplusassignment.domain.cart.repository.CartRepository;
 import com.example.shopingplusassignment.domain.order.common.OrderStatus;
 import com.example.shopingplusassignment.domain.order.dto.ResponseSavedOrderDto;
@@ -10,14 +11,13 @@ import com.example.shopingplusassignment.domain.order.dto.ResponseSavedOrderList
 import com.example.shopingplusassignment.domain.order.entity.Order;
 import com.example.shopingplusassignment.domain.order.repository.OrderRepository;
 import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
-import com.example.shopingplusassignment.domain.productOrder.dto.ResponseProductOrderDto;
 import com.example.shopingplusassignment.domain.productOrder.entity.ProductOrder;
 import com.example.shopingplusassignment.domain.productOrder.repository.ProductOrderRepository;
 import com.example.shopingplusassignment.domain.user.entity.User;
 import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 import com.example.shopingplusassignment.global.Event.CartClearEvent;
-import error.CustomRuntimeException;
-import error.ExceptionCode;
+import com.example.shopingplusassignment.error.CustomRuntimeException;
+import com.example.shopingplusassignment.error.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -61,25 +61,22 @@ public class OrderService {
 
     @Transactional
     public ResponseSavedOrderDto postOrderService(String email) {
-
         User user = userRepository.findByEmail(email).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.USER_CANT_FIND));
         Address addresses = addressRepository.findDefaultAddress(user.getId());
-
         Order order = new Order(user, addresses.getId());
         order.changeOrderStatus(OrderStatus.PENDING);
         Order savedOrder = orderRepository.save(order);
-
-        List<ResponseProductOrderDto> responseProductOrderDtoList = productOrderRepository.findResponseProductOrderDtoByOrderId(savedOrder.getId());
+        List<CartResponseOrderDto> responseProductOrderDtoList = cartRepository.findResponseCartOrderDtoByOrderId(savedOrder.getId());
 
         List<ProductOrder> productOrderList = responseProductOrderDtoList
                 .stream()
-                .map(ResponseProductOrderDto::toEntity)
+                .map(CartResponseOrderDto::toEntity)
                 .toList();
 
         productOrderRepository.saveAll(productOrderList);
-
+        Order finalOrder = new Order(order, productOrderList);
+        orderRepository.save(finalOrder);
         publisher.publishEvent(new CartClearEvent(this, user.getId()));
-
         return new ResponseSavedOrderDto(savedOrder);
     }
 
