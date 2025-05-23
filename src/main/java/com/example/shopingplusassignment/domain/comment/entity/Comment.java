@@ -27,27 +27,29 @@ import com.example.shopingplusassignment.domain.user.entity.User;
 public class Comment extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	Long id;
+	private Long id;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id")
-	User user;
+	private User user;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "product_id")
-    Product product;
+	private Product product;
 
 	@Column(nullable = false)
-	String title;
+	private String title;
 
 	@Column(nullable = false)
-	String description;
+	private String description;
 
 	@Column(nullable = false)
-	int rating;
+	private int rating;
 
-	boolean isDelete;
-	LocalDateTime deletedAt;
+	@Column(name ="is_deleted")
+	private boolean isDelete;
+
+	private LocalDateTime deletedAt;
 
 	public Comment(){
 
