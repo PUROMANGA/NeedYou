@@ -9,6 +9,6 @@ import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
 
 public interface CommentService {
        CommentResponseDto saveComment(Long orderId, Long productId, Long userId, CommentRequestDto dto);
-	   List<CommentGetInfoDto> getCommentByRating( int min, int max , int page, int size);
-	   CommentMessageResponseDto deleteComment(Long orderId, Long productId, Long userId, Long reviewId);
+	   List<CommentGetInfoDto> getCommentByRating(Long productId, int min, int max , int page, int size);
+	   CommentMessageResponseDto deleteComment(Long productId, Long userId, Long reviewId);
 }

@@ -1,12 +1,13 @@
 package com.example.shopingplusassignment.domain.comment.service;
 
+import error.CustomRuntimeException;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -17,19 +18,21 @@ import com.example.shopingplusassignment.domain.comment.dto.CommentRequestDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
 import com.example.shopingplusassignment.domain.comment.entity.Comment;
 import com.example.shopingplusassignment.domain.comment.repository.CommentRepository;
+import com.example.shopingplusassignment.domain.order.common.OrderStatus;
 import com.example.shopingplusassignment.domain.order.entity.Order;
 import com.example.shopingplusassignment.domain.order.repository.OrderRepository;
+import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
-import com.example.shopingplusassignment.domain.productOrder.entity.ProductOrder;
-import com.example.shopingplusassignment.domain.user.repository.UserRepository;
+
+import error.ExceptionCode;
 
 @Service
 @RequiredArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
 	private final CommentRepository commentRepository;
-	private final OrderRepository orderRepository;
 	private final ProductRepository productRepository;
+	private final OrderRepository orderRepository;
 
 
 	@Transactional
@@ -37,9 +40,20 @@ public class CommentServiceImpl implements CommentService {
 	public CommentResponseDto saveComment(Long orderId, Long productId, Long userId, CommentRequestDto dto) {
 
 		Order order = orderRepository.findById(orderId).orElseThrow();
-
-
-		Comment Comment = new Comment(dto, order);
+        if(!order.getUser().getId().equals(userId)){
+			throw  new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_REVIEW_ACCESS);
+		}
+		if(order.getOrderStatus().equals(OrderStatus.PENDING)){
+			throw  new CustomRuntimeException(ExceptionCode.PAYMENT_REQUIRED);
+		}
+		boolean notFound = order.getProductOrderList()
+			.stream()
+			.noneMatch(po -> po.getProductId().equals(productId));
+		if(notFound){
+			throw  new CustomRuntimeException(ExceptionCode.PRODUCTORDER_NOT_FOUND);
+		}
+		Product findByProduct = productRepository.findById(productId).orElseThrow(()-> new CustomRuntimeException(ExceptionCode.PRODUCT_CANT_FIND));
+		Comment Comment = new Comment(dto, order.getUser(),findByProduct);
 		Comment saveComment = commentRepository.save(Comment);
 		return new CommentResponseDto(saveComment);
 	}
@@ -47,34 +61,25 @@ public class CommentServiceImpl implements CommentService {
 
 	@Transactional(readOnly = true)
 	@Override
-	public List<CommentGetInfoDto> getCommentByRating( int min, int max, int page, int size) {
+	public List<CommentGetInfoDto> getCommentByRating(Long productId, int min, int max, int page, int size) {
 
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "creatTime"));
 
-		Page<CommentGetInfoDto> commentResponseDtos = commentRepository.findCommentsByDynamicCondition( min,  max, pageRequest);
-
-		commentResponseDtos.getContent().forEach(dto -> System.out.println("💬 " + dto));
+		Page<CommentGetInfoDto> commentResponseDtos = commentRepository.findCommentsByDynamicCondition(productId, min,  max, pageRequest);
 
 		return  commentResponseDtos.getContent();
 	}
 
-	/**
-	 *
-	 * @param orderId
-	 * @param productId
-	 * @param userId
-	 * @param reviewId
-	 * @return
-	 */
+
 	@Transactional
 	@Override
-	public CommentMessageResponseDto deleteComment(Long orderId, Long productId, Long userId, Long reviewId) {
+	public CommentMessageResponseDto deleteComment(Long productId, Long userId, Long reviewId) {
 
 		Comment getComment = commentRepository.findByIdAndDeletedAtIsNull(reviewId)
-			.orElseThrow(()-> new RuntimeException("리뷰가 존재하지 않습니다."));
+			.orElseThrow(()-> new CustomRuntimeException(ExceptionCode. COMMENT_NOT_FOUND));
 
 		if (!getComment.getUser().getId().equals(userId)) {
-			throw new RuntimeException("본인이 작성한 댓글만 삭제할 수 있습니다.");
+			throw new CustomRuntimeException(ExceptionCode. UNAUTHORIZED_COMMENT_DELETE);
 		}
 
 		getComment.markAsDeleted(true, LocalDateTime.now());
