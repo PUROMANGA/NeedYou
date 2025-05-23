@@ -17,6 +17,6 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     Optional<Brand> findByIdFetchSeller(@Param("id") Long id);
 
     @Query("SELECT b FROM Brand b JOIN FETCH b.productList WHERE b.id = :id")
-    Optional<Brand> findByIdFetchProduct(Long brandId);
+    Optional<Brand> findByIdFetchProduct(@Param("id") Long brandId);
 
 }
