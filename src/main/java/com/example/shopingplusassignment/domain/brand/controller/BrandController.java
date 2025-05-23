@@ -39,7 +39,12 @@ public class BrandController {
         return new ResponseEntity<>(brandResponseDto, HttpStatus.CREATED);
     }
 
-    // 전체 브랜드 조회 기능
+
+    /**
+     * 전체 브랜드 조회 요청 컨트롤러 (로그인 없이 누구나 접근 가능)
+     *
+     * @return 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
+     */
     @GetMapping
     public ResponseEntity<List<BrandResponseDto>> getAllBrands() {
         List<BrandResponseDto> brandList = brandService.getAllBrands();
@@ -50,7 +55,7 @@ public class BrandController {
      * 브랜드 개별 조회 요청 컨트롤러 (로그인 없이 누구나 접근 가능)
      *
      * @param brandId 조회할 브랜드의 ID
-     * @return 브랜드 정보가 담긴 {@link DetailBrandResponseDto} 객체
+     * @return 브랜드 정보 및 상품리스트가 담긴 {@link DetailBrandResponseDto} 객체
      */
     @GetMapping("/{brandId}")
     private ResponseEntity<DetailBrandResponseDto> getBrand(

@@ -1,6 +1,7 @@
 package com.example.shopingplusassignment.domain.brand.repository;
 
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -15,12 +16,7 @@ public interface BrandRepository extends JpaRepository<Brand, Long> {
     @Query("SELECT b FROM Brand b JOIN FETCH b.seller WHERE b.id = :id")
     Optional<Brand> findByIdFetchSeller(@Param("id") Long id);
 
-    List<Brand> findAllByWithdrawnIsFalse();
-
-    @Query("SELECT b FROM Brand b " +
-            "JOIN FETCH b.seller " +
-            "LEFT JOIN FETCH b.productList " +
-            "WHERE b.id = :brandId")
-    Optional<Brand> findByIdFetchSellerAndProducts(@Param("brandId") Long brandId);
+    @Query("SELECT b FROM Brand b JOIN FETCH b.productList WHERE b.id = :id")
+    Optional<Brand> findByIdFetchProduct(Long brandId);
 
 }

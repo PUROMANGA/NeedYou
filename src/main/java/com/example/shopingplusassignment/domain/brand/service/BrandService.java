@@ -7,8 +7,6 @@ import com.example.shopingplusassignment.domain.brand.dto.response.DetailBrandRe
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.brand.repository.BrandRepository;
 import com.example.shopingplusassignment.domain.product.dto.ForBrandProductResponseDto;
-import com.example.shopingplusassignment.domain.product.dto.ResponseProductDto;
-import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
 import com.example.shopingplusassignment.domain.seller.entity.Seller;
 import com.example.shopingplusassignment.domain.seller.repository.SellerRepository;
 import error.CustomRuntimeException;
@@ -43,7 +41,7 @@ public class BrandService {
 
         // 유저 식별자로 로그인 확인
         Seller seller = sellerRepository.findByUserId(userId)
-                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_CREATION)); // "판매자 등록이 되어있지 않은 사용자입니다."
+                .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_CREATION));
 
         // 브랜드 생성 (이름, 셀러)
         Brand brand = Brand.create(requestDto.getBrandName(), seller);
@@ -53,11 +51,15 @@ public class BrandService {
         return BrandResponseDto.of(brand);
     }
 
-    // 모든 브랜드 조회
+    /**
+     * 전체 브랜드 조회 요청 서비스
+     *
+     * @return 별자에 해당하는 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
+     */
     @Transactional(readOnly = true)
     public List<BrandResponseDto> getAllBrands() {
 
-        List<Brand> brandList = brandRepository.findAllByWithdrawnIsFalse();
+        List<Brand> brandList = brandRepository.findAll();
 
         List<BrandResponseDto> brandResponseDtoList = new ArrayList<>();
         for (Brand brand : brandList) {
@@ -74,16 +76,11 @@ public class BrandService {
      * @param brandId 브랜드 정보 식별자
      * @return 식별자에 해당하는 브랜드 정보가 담긴 {@link BrandResponseDto} 객체
      */
-    // 추후 브랜드 조회시 상품 리스트 같이 response 해주기
     @Transactional(readOnly = true)
-    public DetailBrandResponseDto getBrand(Long brandId) { // 브랜드 id 받아와서
+    public DetailBrandResponseDto getBrand(Long brandId) {
 
-        Brand brand = brandRepository.findByIdFetchSellerAndProducts(brandId)
+        Brand brand = brandRepository.findByIdFetchProduct(brandId)
                 .orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
-
-        if (brand.isWithdrawn()) {
-            throw new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND);
-        }
 
         List<ForBrandProductResponseDto> forBrandProductResponseDtoList = brand.getProductList().stream()
                 .map(ForBrandProductResponseDto::of)
@@ -134,7 +131,7 @@ public class BrandService {
             throw new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_BRAND_ACCESS);
         }
 
-        brand.isClosed();
+        brandRepository.delete(brand);
     }
 
 }
