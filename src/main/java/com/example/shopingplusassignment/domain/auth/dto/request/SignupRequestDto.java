@@ -13,7 +13,6 @@ public class SignupRequestDto {
     private final String phone;
     private final String UserRole;
 
-
     public SignupRequestDto(String name, String password, String email, String phone, String userRole) {
         this.name = name;
         this.password = password;

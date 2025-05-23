@@ -1,0 +1,59 @@
+package com.example.shopingplusassignment.domain.comment.repository;
+
+import java.util.List;
+
+import lombok.RequiredArgsConstructor;
+
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+import com.example.shopingplusassignment.domain.comment.dto.CommentGetInfoDto;
+import com.example.shopingplusassignment.domain.comment.entity.Comment;
+import com.example.shopingplusassignment.domain.comment.entity.QComment;
+import com.example.shopingplusassignment.domain.product.entity.QProduct;
+import com.querydsl.core.BooleanBuilder;
+import com.querydsl.jpa.impl.JPAQueryFactory;
+
+@Repository
+@RequiredArgsConstructor
+public class CommentRepositoryImpl implements CommentRepositoryCustom {
+
+
+
+	QComment comment = QComment.comment;
+	QProduct product = QProduct.product;
+
+	private final JPAQueryFactory queryFactory;
+
+	@Override
+	public Page<CommentGetInfoDto> findCommentsByDynamicCondition( int min, int max, Pageable pageable) {
+
+		BooleanBuilder builder = new BooleanBuilder();
+		builder.and(comment.rating.between(min, max));
+		builder.and(comment.deletedAt.isNull());
+
+
+		List<Comment> results = queryFactory
+			.selectFrom(comment)
+			.where(
+				comment.rating.between(min, max),
+				comment.deletedAt.isNull()
+			).offset(pageable.getOffset())
+			.limit(pageable.getPageSize())
+			.orderBy(comment.creatTime.desc())
+			.fetch();
+
+		Long count = queryFactory
+			.select(comment.count())
+			.from(comment)
+			.where(builder)
+			.fetchOne();
+
+		return new PageImpl<CommentGetInfoDto>(
+			results.stream().map(CommentGetInfoDto::new).toList(),
+			pageable,
+			count == null ? 0L : count // ← L 붙이기!
+		);
+	}
+}
