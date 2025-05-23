@@ -42,4 +42,13 @@ public class User extends BaseEntity {
         this.password = newPassword;
     }
 
+
+    public User(String name, String password, String email, String phone, UserRole userRole, boolean status) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.userRole = userRole;
+        this.status = status;
+    }
 }

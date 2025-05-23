@@ -1,7 +1,10 @@
 package com.example.shopingplusassignment.domain.product.common;
 
 import com.example.shopingplusassignment.domain.product.dto.ResponseProductDto;
+import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -27,7 +30,10 @@ public class PopularKeywordSetting {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Scheduled(cron = "0 0 */4 * * *")
-    public void addPopularKeyword() {
+    public void addPopularKeyword() throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
 
         Set<ZSetOperations.TypedTuple<Object>> topKeywords =
                 redisTemplate.opsForZSet()
@@ -40,8 +46,9 @@ public class PopularKeywordSetting {
 
         for (String keyword : getTopKeyword) {
             Pageable pageable = PageRequest.of(0, 10);
-            Slice<ResponseProductDto> responseProductDtoSlice = productRepository.findByKeyword(keyword, pageable);
-            redisTemplate.opsForValue().set("PopularProducts" + keyword + ":slice:0", responseProductDtoSlice.getContent(), Duration.ofHours(4));
+            Slice<Product> responseProductDtoSlice = productRepository.findByKeyword(keyword, pageable);
+            String json = objectMapper.writeValueAsString(responseProductDtoSlice.getContent());
+            redisTemplate.opsForValue().set("PopularProducts" + keyword + ":slice:0", json, Duration.ofHours(4));
         }
     }
 

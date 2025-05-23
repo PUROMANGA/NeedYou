@@ -119,13 +119,14 @@ public class ProductService {
      */
 
     @Transactional(readOnly = true)
-    public Slice<ResponseProductDto> searchProductService(String keyword, Pageable pageable) {
-        productCache.savedKeywordByCounting(keyword);
-        Slice<ResponseProductDto> findProductByKeyword = productRepository.findByKeyword(keyword, pageable);
+    public Slice<ResponseProductDto> searchProductService(String keyword, Pageable pageable, String email) {
+        productCache.savedKeywordByCounting(keyword, email);
+        Slice<Product> findProductByKeyword = productRepository.findByKeyword(keyword, pageable);
         if(findProductByKeyword.isEmpty()) {
             throw new RuntimeException("검색 결과가 없습니다");
         }
-        return findProductByKeyword;
+
+        return findProductByKeyword.map(ResponseProductDto::new);
     }
 
 
@@ -144,13 +145,13 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Slice<ResponseProductDto> searchProductServicePopularProductCategoryNormal(Pageable pageable) {
         long start = System.currentTimeMillis();
-        Slice<ResponseProductDto> foundCoolerByProductCategory = productRepository.findProductByProductCategory(ProductCategory.COOLER, pageable);
+        Slice<Product> foundCoolerByProductCategory = productRepository.findProductByProductCategory(ProductCategory.COOLER, pageable);
         if(foundCoolerByProductCategory.isEmpty()) {
             throw new RuntimeException("검색 결과가 없습니다");
         }
         long end = System.currentTimeMillis();
         log.info("DB 조회 시간: {}ms",(end - start));
-        return foundCoolerByProductCategory;
+        return foundCoolerByProductCategory.map(ResponseProductDto::new);
     }
 
     /**
@@ -179,6 +180,8 @@ public class ProductService {
             boolean hasNext = responseProductDto.size() > size;
             return new SliceImpl<>(responseProductDto.subList(0, Math.min(size, responseProductDto.size())), PageRequest.of(0, size), hasNext);
         }
-        return productRepository.findByKeyword(keyword, pageable);
+
+        Slice<Product> products = productRepository.findByKeyword(keyword, pageable);
+        return products.map(ResponseProductDto::new);
     }
 }

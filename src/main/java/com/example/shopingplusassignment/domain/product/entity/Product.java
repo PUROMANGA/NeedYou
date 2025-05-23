@@ -6,8 +6,10 @@ import com.example.shopingplusassignment.domain.product.common.ProductCategory;
 import com.example.shopingplusassignment.domain.product.dto.RequestProductDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.parameters.P;
 
 @Getter
 @AllArgsConstructor
@@ -32,8 +34,6 @@ public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private Long stock;
-    
-    private Long rating;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -61,6 +61,20 @@ public class Product extends BaseEntity {
         this.price = requestProductDto.getPrice();
         this.stock = requestProductDto.getStock();
         this.productCategory = requestProductDto.getProductCategory();
+    }
+
+    /**
+     * 테스트 전용 prodctBuild
+     */
+
+    public Product(String name, String description, Long price, Long stock, ProductCategory productCategory, Brand brand, Long sellerId) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.productCategory = productCategory;
+        this.brand = brand;
+        this.sellerId = sellerId;
     }
 
     /**
