@@ -15,11 +15,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import com.example.shopingplusassignment.domain.comment.dto.CommentGetCountResponseDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentGetInfoDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentMessageResponseDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentRequestDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
 import com.example.shopingplusassignment.domain.comment.repository.CommentRepository;
+import com.example.shopingplusassignment.domain.comment.service.CommentCacheService;
 import com.example.shopingplusassignment.domain.comment.service.CommentServiceImpl;
 import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 
@@ -28,6 +30,7 @@ import com.example.shopingplusassignment.domain.common.dto.AuthUser;
 @RequiredArgsConstructor
 public class CommentController {
 	private final CommentServiceImpl commentService;
+	private final CommentCacheService commentCacheService;
 
 	@PostMapping
 	public ResponseEntity<CommentResponseDto> saveComment(
@@ -48,7 +51,13 @@ public class CommentController {
 	) {
 		return new ResponseEntity<>(commentService.getCommentByRating(productId, min, max, page, size), HttpStatus.OK);
 	}
+	@GetMapping
+	public ResponseEntity<CommentGetCountResponseDto> getReviewCount(@RequestParam Long productId) {
+		Long count = commentCacheService.getReviewCount(productId);
+		CommentGetCountResponseDto commentGetCountResponseDto = new CommentGetCountResponseDto(productId, count);
 
+		return new ResponseEntity<>(commentGetCountResponseDto , HttpStatus.OK);
+	}
 	@DeleteMapping("/{reviewId}")
 	public ResponseEntity<CommentMessageResponseDto> DeleteComment(
 		@RequestParam Long productId,
