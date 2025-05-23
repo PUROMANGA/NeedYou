@@ -3,7 +3,7 @@ package com.example.shopingplusassignment.domain.user.entity;
 import base_entity.BaseEntity;
 import com.example.shopingplusassignment.domain.user.enums.UserRole;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -26,6 +26,7 @@ public class User extends BaseEntity {
     @Column(nullable = false)
     private boolean status = false;
 
+    @Builder
     public User(String name, String email, String password, String phone, UserRole userRole) {
         this.name = name;
         this.email = email;
