@@ -2,11 +2,13 @@ package com.example.shopingplusassignment.domain.comment.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import com.example.shopingplusassignment.error.CustomRuntimeException;
 import com.example.shopingplusassignment.error.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -31,6 +33,7 @@ public class CommentServiceImpl implements CommentService {
 	private final CommentRepository commentRepository;
 	private final ProductRepository productRepository;
 	private final OrderRepository orderRepository;
+	private final CommentCacheService commentCacheService;
 
 
 	@Transactional
@@ -57,6 +60,7 @@ public class CommentServiceImpl implements CommentService {
 	}
 
 
+    @Cacheable(value = "comment", key = "'product:' + #productId + ':page:' + #page")
 	@Transactional(readOnly = true)
 	@Override
 	public List<CommentGetInfoDto> getCommentByRating(Long productId, int min, int max, int page, int size) {
@@ -64,8 +68,16 @@ public class CommentServiceImpl implements CommentService {
 		PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "creatTime"));
 
 		Page<CommentGetInfoDto> commentResponseDtos = commentRepository.findCommentsByDynamicCondition(productId, min,  max, pageRequest);
+		List<Long> commentIds = commentResponseDtos.stream().map(CommentGetInfoDto::getId).toList();
+		Map<Long, Long> likeCounts =commentCacheService.getLikeCounts(commentIds);
 
-		return  commentResponseDtos.getContent();
+		List<CommentGetInfoDto> result = commentResponseDtos.getContent();
+
+		for (CommentGetInfoDto dto : result) {
+			Long likeCount = likeCounts.getOrDefault(dto.getId(), 0L);
+			dto.updateLikeCount(likeCount);
+		}
+		return  result;
 	}
 
 

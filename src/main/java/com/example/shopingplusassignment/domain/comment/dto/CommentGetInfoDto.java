@@ -23,6 +23,7 @@ public class CommentGetInfoDto {
 	private int rating;
 	private String createdAt;
 	private String modifiedAt;
+	private Long LikeCount;
 
 	public CommentGetInfoDto(Comment comment) {
 		this.Id = comment.getId();
@@ -32,5 +33,8 @@ public class CommentGetInfoDto {
 		this.rating = comment.getRating();
 		this.createdAt = comment.getCreatTime().toString();
 		this.modifiedAt =comment.getModifiedTime().toString();
+	}
+	public void updateLikeCount(Long likeCount){
+		this.LikeCount =likeCount;
 	}
 }

@@ -51,7 +51,7 @@ public class CommentController {
 	) {
 		return new ResponseEntity<>(commentService.getCommentByRating(productId, min, max, page, size), HttpStatus.OK);
 	}
-	@GetMapping
+	@GetMapping("/count")
 	public ResponseEntity<CommentGetCountResponseDto> getReviewCount(@RequestParam Long productId) {
 		Long count = commentCacheService.getReviewCount(productId);
 		CommentGetCountResponseDto commentGetCountResponseDto = new CommentGetCountResponseDto(productId, count);
