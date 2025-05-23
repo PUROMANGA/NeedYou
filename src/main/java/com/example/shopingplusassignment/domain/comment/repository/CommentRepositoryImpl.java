@@ -2,6 +2,7 @@ package com.example.shopingplusassignment.domain.comment.repository;
 
 import java.util.List;
 
+import com.example.shopingplusassignment.domain.comment.entity.QComment;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
@@ -10,16 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import com.example.shopingplusassignment.domain.comment.dto.CommentGetInfoDto;
 import com.example.shopingplusassignment.domain.comment.entity.Comment;
-import com.example.shopingplusassignment.domain.comment.entity.QComment;
-import com.example.shopingplusassignment.domain.product.entity.QProduct;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 
 @Repository
 @RequiredArgsConstructor
 public class CommentRepositoryImpl implements CommentRepositoryCustom {
-
-
 
 	QComment comment = QComment.comment;
 

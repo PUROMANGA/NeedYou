@@ -1,6 +1,6 @@
 package com.example.shopingplusassignment.domain.product.entity;
 
-import base_entity.BaseEntity;
+import com.example.shopingplusassignment.base_entity.BaseEntity;
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.product.common.ProductCategory;
 import com.example.shopingplusassignment.domain.product.dto.RequestProductDto;
