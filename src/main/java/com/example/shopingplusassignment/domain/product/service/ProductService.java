@@ -15,7 +15,9 @@ import com.example.shopingplusassignment.domain.user.entity.User;
 import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 import com.example.shopingplusassignment.error.CustomRuntimeException;
 import com.example.shopingplusassignment.error.ExceptionCode;
+import com.example.shopingplusassignment.global.Event.ElasticsearchRegistrationEvent;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.*;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +25,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,7 +39,7 @@ public class ProductService {
     private final PopularKeywordSetting popularKeywordSetting;
     private final RedisTemplate<String, Object> redisTemplate;
     private final UserRepository userRepository;
-
+    private final ApplicationEventPublisher publisher;
     /**
      * 로그인된 판매자의 email로 seller 객체를 찾아주고, brandId로 brand를 찾아준다음, product 객체에 저장시키고, db에도 저장합니다.
      *
@@ -55,7 +56,9 @@ public class ProductService {
         Seller seller = sellerRepository.findByUserId(userId).orElseThrow(() -> new RuntimeException("셀러가 없습니다"));
         Brand brand = brandRepository.findById(brandId).orElseThrow(() -> new CustomRuntimeException(ExceptionCode.BRAND_CANT_FIND));
         Product product = new Product(requestProductDto, brand, seller.getId());
-        return new ResponseProductDto(productRepository.save(product));
+        Product savedProduct = productRepository.save(product);
+        publisher.publishEvent(new ElasticsearchRegistrationEvent(this, savedProduct));
+        return new ResponseProductDto(savedProduct);
     }
 
     /**
@@ -171,6 +174,7 @@ public class ProductService {
     public Slice<ResponseProductDto> getPopularProductsByKeyword(String keyword, int page, int size) {
         Sort sort = Sort.by(Sort.Direction.DESC, "createdTime");
         Pageable pageable = PageRequest.of(page, size, sort);
+
         if(page == 0) {
             Object object = redisTemplate.opsForValue().get("PopularProducts:" + keyword + ":slice:0");
 

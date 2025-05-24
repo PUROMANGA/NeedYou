@@ -36,6 +36,7 @@ public class CustomCartRepositoryImpl implements CustomCartRepository {
                 .from(cart)
                 .join(product).on(cart.productId.eq(product.id))
                 .join(order).on(cart.userId.eq(order.user.id))
+                .where(order.id.eq(orderId))
                 .fetch();
 
         if(result == null) {

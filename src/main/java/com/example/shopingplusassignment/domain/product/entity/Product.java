@@ -4,6 +4,7 @@ import com.example.shopingplusassignment.base_entity.BaseEntity;
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.product.common.ProductCategory;
 import com.example.shopingplusassignment.domain.product.dto.RequestProductDto;
+import com.example.shopingplusassignment.domain.productOrder.entity.ProductOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -89,5 +90,16 @@ public class Product extends BaseEntity {
         this.stock = requestProductDto.getStock();
         this.productCategory = requestProductDto.getProductCategory();
         this.brand = brand;
+    }
+
+    /**
+     * 재고변경
+     */
+    public void decreaseStock(Long amount) {
+
+        if (this.stock < amount) {
+            throw new IllegalArgumentException("재고가 부족합니다.");
+        }
+        this.stock -= amount;
     }
 }

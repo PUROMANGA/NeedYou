@@ -43,7 +43,36 @@ public class User extends BaseEntity {
     }
 
 
+    /**
+     * ProductCache 테스트용 생성자
+     * @param name
+     * @param password
+     * @param email
+     * @param phone
+     * @param userRole
+     * @param status
+     */
     public User(String name, String password, String email, String phone, UserRole userRole, boolean status) {
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.phone = phone;
+        this.userRole = userRole;
+        this.status = status;
+    }
+
+    /**
+     * LockTest용 생성자
+     * @param id
+     * @param name
+     * @param password
+     * @param email
+     * @param phone
+     * @param userRole
+     * @param status
+     */
+    public User(Long id, String name, String password, String email, String phone, UserRole userRole, boolean status) {
+        this.id = id;
         this.name = name;
         this.password = password;
         this.email = email;
