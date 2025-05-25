@@ -2,7 +2,6 @@ package com.example.shopingplusassignment.domain.config;
 
 import com.example.shopingplusassignment.domain.auth.repository.RefreshTokenRepository;
 import com.example.shopingplusassignment.domain.user.entity.User;
-import com.example.shopingplusassignment.domain.user.enums.UserRole;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
