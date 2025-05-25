@@ -2,6 +2,7 @@ package com.example.shopingplusassignment.domain.comment.repository;
 
 import java.util.List;
 
+import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
 import com.example.shopingplusassignment.domain.comment.entity.QComment;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +10,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
-import com.example.shopingplusassignment.domain.comment.dto.CommentGetInfoDto;
 import com.example.shopingplusassignment.domain.comment.entity.Comment;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -23,7 +23,7 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
 	private final JPAQueryFactory queryFactory;
 
 	@Override
-	public Page<CommentGetInfoDto> findCommentsByDynamicCondition( Long productId,int min, int max, Pageable pageable) {
+	public Page<CommentResponseDto> findCommentsByDynamicCondition( Long productId, Long min, Long max, Pageable pageable) {
 
 		BooleanBuilder builder = new BooleanBuilder();
 		builder.and(comment.rating.between(min, max));
@@ -47,8 +47,8 @@ public class CommentRepositoryImpl implements CommentRepositoryCustom {
 			.where(builder)
 			.fetchOne();
 
-		return new PageImpl<CommentGetInfoDto>(
-			results.stream().map(CommentGetInfoDto::new).toList(),
+		return new PageImpl<CommentResponseDto>(
+			results.stream().map(CommentResponseDto::new).toList(),
 			pageable,
 			count == null ? 0L : count // ← L 붙이기!
 		);
