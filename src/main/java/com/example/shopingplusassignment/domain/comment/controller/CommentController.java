@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.example.shopingplusassignment.domain.comment.dto.CommentGetCountResponseDto;
+import com.example.shopingplusassignment.domain.comment.dto.CommentLikeResponseDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentMessageResponseDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentRequestDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
@@ -90,7 +91,7 @@ public class CommentController {
 	}
 
 	@PatchMapping("/{reviewId}/likes")
-	public ResponseEntity<CommentMessageResponseDto> updateLikeComment(
+	public ResponseEntity<CommentLikeResponseDto> updateLikeComment(
 		@RequestParam boolean status,
 		@PathVariable Long reviewId,
 		@AuthenticationPrincipal AuthUser authUser

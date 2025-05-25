@@ -3,6 +3,7 @@ package com.example.shopingplusassignment.domain.comment.service;
 import java.util.List;
 
 import com.example.shopingplusassignment.domain.comment.dto.CommentGetCountResponseDto;
+import com.example.shopingplusassignment.domain.comment.dto.CommentLikeResponseDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentMessageResponseDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentRequestDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
@@ -20,7 +21,7 @@ public interface CommentCacheService {
 
 	CommentGetCountResponseDto getCommentCountCache(Long productId);
 
-	CommentMessageResponseDto updateCommentLikeStatusCache(Long userId, Long reviewId, boolean status);
+	CommentLikeResponseDto updateCommentLikeStatusCache(Long userId, Long reviewId, boolean status);
 
 	void invalidateCommentCache(Long productId);
 

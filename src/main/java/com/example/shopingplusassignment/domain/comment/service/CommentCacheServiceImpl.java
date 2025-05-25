@@ -11,6 +11,7 @@ import org.springframework.cache.annotation.Cacheable;;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import com.example.shopingplusassignment.domain.comment.dto.CommentGetCountResponseDto;
+import com.example.shopingplusassignment.domain.comment.dto.CommentLikeResponseDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentMessageResponseDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentRequestDto;
 import com.example.shopingplusassignment.domain.comment.dto.CommentResponseDto;
@@ -39,7 +40,6 @@ public class CommentCacheServiceImpl implements CommentCacheService {
 		invalidateLikeCount(commentResponseDto.getId());    // 좋아요 무효화
 		return commentResponseDto;
 	}
-
 
 
 	/**
@@ -136,10 +136,21 @@ public class CommentCacheServiceImpl implements CommentCacheService {
 	 * @return
 	 */
 	@Override
-	public CommentMessageResponseDto updateCommentLikeStatusCache(Long userId, Long reviewId, boolean status) {
+	public CommentLikeResponseDto updateCommentLikeStatusCache(Long userId, Long reviewId, boolean status) {
 		Comment comment = commentService.applyLikeStatus(userId, reviewId, status);
-		redisTemplate.opsForHash().put("comment:likes", comment.getId().toString(), comment.getLikeCount());
-		return new CommentMessageResponseDto("성공", status ? "좋아요가 반영되었습니다." : "좋아요가 취소되었습니다.");
+		Long count =comment.getLikeCount();
+		redisTemplate.opsForHash().put("comment:likes", comment.getId().toString(), count);
+		String message;
+
+		if (status) {
+			message = "좋아요가 반영되었습니다.";
+		} else if (count == 0) {
+			message = "이미 좋아요가 없습니다.";
+		} else {
+			message = "좋아요가 취소되었습니다.";
+		}
+
+		return new CommentLikeResponseDto("성공", message,  count);
 	}
 
 	// TODO: 이 메서드들은 내부 전용. 여유 있을 때 private 전환 고려.
