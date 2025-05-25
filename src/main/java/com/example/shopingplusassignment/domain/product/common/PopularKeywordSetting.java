@@ -1,7 +1,12 @@
 package com.example.shopingplusassignment.domain.product.common;
 
+import com.example.shopingplusassignment.domain.ProductDocument.ElasticCommonProductRepository;
+import com.example.shopingplusassignment.domain.ProductDocument.ProductDocument;
 import com.example.shopingplusassignment.domain.product.dto.ResponseProductDto;
+import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.product.repository.ProductRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +30,15 @@ public class PopularKeywordSetting {
     private List<String> getTopKeyword = new ArrayList<>();
     private final ProductRepository productRepository;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final ElasticCommonProductRepository elasticCommonProductRepository;
+
+
 
     @Scheduled(cron = "0 0 */4 * * *")
-    public void addPopularKeyword() {
+    public void addPopularKeyword() throws JsonProcessingException {
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
 
         Set<ZSetOperations.TypedTuple<Object>> topKeywords =
                 redisTemplate.opsForZSet()
@@ -40,8 +51,10 @@ public class PopularKeywordSetting {
 
         for (String keyword : getTopKeyword) {
             Pageable pageable = PageRequest.of(0, 10);
-            Slice<ResponseProductDto> responseProductDtoSlice = productRepository.findByKeyword(keyword, pageable);
-            redisTemplate.opsForValue().set("PopularProducts" + keyword + ":slice:0", responseProductDtoSlice.getContent(), Duration.ofHours(4));
+
+            Slice<ProductDocument> productDocuments = elasticCommonProductRepository.searchByKeyword(keyword, pageable);
+            String json = objectMapper.writeValueAsString(productDocuments);
+            redisTemplate.opsForValue().set("PopularProducts" + keyword + ":slice:0", json, Duration.ofHours(4));
         }
     }
 

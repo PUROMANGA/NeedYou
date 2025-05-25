@@ -52,4 +52,13 @@ public class Order extends BaseEntity {
     public void changeOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
+
+    /**
+     * 테스트용 생성자
+     */
+    public Order(User user, Long addressId, OrderStatus orderStatus) {
+        this.user = user;
+        this.addressId = addressId;
+        this.orderStatus = orderStatus;
+    }
 }

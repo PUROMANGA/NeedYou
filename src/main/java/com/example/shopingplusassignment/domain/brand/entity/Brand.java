@@ -29,6 +29,24 @@ public class Brand extends BaseEntity {
         return brand;
     }
 
+    public Brand(Long id, String name, Seller seller) {
+        this.id = id;
+        this.name = name;
+        this.seller = seller;
+    }
+
+    /**
+     * 테스트용 생성자
+     * @param name
+     */
+
+    public Brand(String name, Seller seller) {
+        this.name = name;
+        this.seller = seller;
+    }
+
+
+
     public void update(String name) {
         this.name = name;
     }

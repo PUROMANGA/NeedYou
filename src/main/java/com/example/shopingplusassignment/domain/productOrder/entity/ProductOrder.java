@@ -49,4 +49,13 @@ public class ProductOrder {
 
     @LastModifiedDate
     private LocalDateTime modifiedTime;
+
+    public ProductOrder(String name, Long price, Long amount, Long totalPrice, Order order, Long productId) {
+        this.name = name;
+        this.price = price;
+        this.amount = amount;
+        this.totalPrice = totalPrice;
+        this.order = order;
+        this.productId = productId;
+    }
 }

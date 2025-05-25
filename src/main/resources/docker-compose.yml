@@ -9,6 +9,26 @@ services:
       - nbc-15_redis_volume:/data
     command: redis-server --requirepass 1234 --appendonly yes
 
+  mysql:
+    image: mysql:8.0
+    container_name: test-mysql
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: 1111
+      MYSQL_DATABASE: shopingplusassignment
+    volumes:
+      - nbc-15_mysql_volume:/var/lib/mysql
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+    ports:
+      - "9200:9200"
+
 volumes:
   nbc-15_mysql_volume:
   nbc-15_redis_volume:
