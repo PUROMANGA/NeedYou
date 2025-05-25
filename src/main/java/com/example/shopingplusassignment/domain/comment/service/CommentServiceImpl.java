@@ -51,7 +51,8 @@ public class CommentServiceImpl implements CommentService {
 	@Override
 	public CommentResponseDto saveComment(Long orderId, Long productId, Long userId, CommentRequestDto dto) {
 
-		Order order = orderRepository.findById(orderId).orElseThrow();
+		Order order = orderRepository.findById(orderId).orElseThrow(()
+			-> new CustomRuntimeException(ExceptionCode.ORDER_NOT_FOUND));
         if(!order.getUser().getId().equals(userId)){
 			//System.out.println(""+userId + "user" + userId);
 			throw  new CustomRuntimeException(ExceptionCode.UNAUTHORIZED_REVIEW_ACCESS);
