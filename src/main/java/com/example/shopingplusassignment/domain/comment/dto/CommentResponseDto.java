@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 @JsonPropertyOrder({
 	"id",
+	"productId",
 	"userId",
 	"title",
 	"description",
