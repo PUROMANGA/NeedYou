@@ -1,5 +1,7 @@
 package com.example.shopingplusassignment.domain.comment.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.Getter;
 
 import com.example.shopingplusassignment.domain.comment.entity.Comment;
@@ -25,8 +27,8 @@ public class CommentResponseDto {
 	private String description;
 	private int rating;
 	private Long likeCount;
-	private String createdAt;
-	private String modifiedAt;
+	private LocalDateTime createdAt;
+	private LocalDateTime modifiedAt;
 
 	public CommentResponseDto() {
 
@@ -39,7 +41,7 @@ public class CommentResponseDto {
 		this.description = comment.getDescription();
 		this.rating = comment.getRating();
 		this.likeCount = comment.getLikeCount();
-		this. createdAt = comment.getCreatTime().toString();
-		this.modifiedAt = comment.getModifiedTime().toString();
+		this. createdAt = comment.getCreatTime();
+		this.modifiedAt = comment.getModifiedTime();
 	}
 }
