@@ -46,10 +46,14 @@ public class Comment extends BaseEntity {
 	@Column(nullable = false)
 	private int rating;
 
+	@Column(name= "like_Count")
+	private Long likeCount = 0L;
+
 	@Column(name ="is_deleted")
 	private boolean isDelete;
 
 	private LocalDateTime deletedAt;
+
 
 	public Comment(){
 
@@ -81,5 +85,16 @@ public class Comment extends BaseEntity {
 		this.isDelete = isDelete;
 		this.deletedAt = now;
 	}
-
+    public void increaseLikeCount(boolean status){
+		if (status) {
+			this.likeCount++;
+		} else {
+			this.likeCount = Math.max(0, this.likeCount - 1);
+		}
+	}
+	public void updateComment(String title, String description, int rating){
+		this.title = title;
+		this.description = description;
+		this.rating = rating;
+	}
 }
