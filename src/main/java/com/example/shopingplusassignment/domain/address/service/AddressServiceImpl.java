@@ -15,8 +15,8 @@ import com.example.shopingplusassignment.domain.address.repository.AddressReposi
 import com.example.shopingplusassignment.domain.user.entity.User;
 import com.example.shopingplusassignment.domain.user.repository.UserRepository;
 
-import error.CustomRuntimeException;
-import error.ExceptionCode;
+import com.example.shopingplusassignment.error.CustomRuntimeException;
+import com.example.shopingplusassignment.error.ExceptionCode;
 import lombok.RequiredArgsConstructor;
 
 @Service
