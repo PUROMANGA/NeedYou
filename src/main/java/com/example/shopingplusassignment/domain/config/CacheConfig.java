@@ -1,10 +1,12 @@
 package com.example.shopingplusassignment.domain.config;
 
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -20,7 +22,7 @@ import java.util.Map;
 
 public class CacheConfig {
 
-    @Bean
+    @Bean(name = "redisCacheManager")
     public RedisCacheManager redisCacheManager(RedisConnectionFactory connectionFactory) {
         RedisCacheConfiguration defaultConfig = RedisCacheConfiguration
                 .defaultCacheConfig()
@@ -43,6 +45,7 @@ public class CacheConfig {
     }
 
     @Bean
+    @Primary
     public CacheManager cacheManager() {
         return new ConcurrentMapCacheManager("product");
     }
