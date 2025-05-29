@@ -43,8 +43,7 @@ public class User extends BaseEntity {
     public void updatePassword(String newPassword){
         this.password = newPassword;
     }
-
-
+  
     /**
      * ProductCache 테스트용 생성자
      * @param name
