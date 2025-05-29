@@ -1,18 +1,16 @@
-package com.example.shopingplusassignment.domain.productOrder.dto;
+package com.example.shopingplusassignment.domain.cart.dto;
 
 import com.example.shopingplusassignment.domain.order.entity.Order;
-import com.example.shopingplusassignment.domain.product.entity.Product;
 import com.example.shopingplusassignment.domain.productOrder.entity.ProductOrder;
-import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
 
-public class ResponseProductOrderDto {
+public class CartResponseOrderDto {
 
-    private Long id;
+    private Long productId;
     private String name;
     private Long price;
     private Long amount;
@@ -21,8 +19,8 @@ public class ResponseProductOrderDto {
     private LocalDateTime creatTime;
     private LocalDateTime modifiedTime;
 
-    public ResponseProductOrderDto(Long id, String name, Long price, Long amount, Long totalPrice, Order order, LocalDateTime creatTime, LocalDateTime modifiedTime) {
-        this.id = id;
+    public CartResponseOrderDto(Long productId, String name, Long price, Long amount, Long totalPrice, Order order, LocalDateTime creatTime, LocalDateTime modifiedTime) {
+        this.productId = productId;
         this.name = name;
         this.price = price;
         this.amount = amount;
@@ -34,12 +32,12 @@ public class ResponseProductOrderDto {
 
     public ProductOrder toEntity() {
         return ProductOrder.builder()
-                .id(this.id)
                 .name(this.name)
                 .price(this.price)
                 .amount(this.amount)
                 .totalPrice(this.totalPrice)
                 .order(this.order)
+                .productId(this.productId)
                 .creatTime(this.creatTime)
                 .modifiedTime(this.modifiedTime)
                 .build();
