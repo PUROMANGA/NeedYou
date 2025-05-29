@@ -100,8 +100,9 @@ public class ProductController {
     @GetMapping("/search")
     public ResponseEntity<Slice<ResponseProductDto>> searchProductController(
             @RequestParam String keyword,
+            @AuthenticationPrincipal AuthUser user,
             @PageableDefault(size = 10, sort = "creatTime", direction = DESC) Pageable pageable) {
-        return ResponseEntity.ok(productService.searchProductService(keyword, pageable));
+        return ResponseEntity.ok(productService.searchProductService(keyword, pageable, user.getUsername()));
     }
 
 

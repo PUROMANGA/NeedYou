@@ -4,10 +4,13 @@ import com.example.shopingplusassignment.base_entity.BaseEntity;
 import com.example.shopingplusassignment.domain.brand.entity.Brand;
 import com.example.shopingplusassignment.domain.product.common.ProductCategory;
 import com.example.shopingplusassignment.domain.product.dto.RequestProductDto;
+import com.example.shopingplusassignment.domain.productOrder.entity.ProductOrder;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.parameters.P;
 
 @Getter
 @AllArgsConstructor
@@ -32,8 +35,6 @@ public class Product extends BaseEntity {
 
     @Column(nullable = false)
     private Long stock;
-    
-    private Long rating;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -64,6 +65,20 @@ public class Product extends BaseEntity {
     }
 
     /**
+     * 테스트 전용 prodctBuild
+     */
+
+    public Product(String name, String description, Long price, Long stock, ProductCategory productCategory, Brand brand, Long sellerId) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.productCategory = productCategory;
+        this.brand = brand;
+        this.sellerId = sellerId;
+    }
+
+    /**
      * 브랜드까지 변경을 할 수 있도록 했습니다
      * @param requestProductDto
      */
@@ -75,5 +90,16 @@ public class Product extends BaseEntity {
         this.stock = requestProductDto.getStock();
         this.productCategory = requestProductDto.getProductCategory();
         this.brand = brand;
+    }
+
+    /**
+     * 재고변경
+     */
+    public void decreaseStock(Long amount) {
+
+        if (this.stock < amount) {
+            throw new IllegalArgumentException("재고가 부족합니다.");
+        }
+        this.stock -= amount;
     }
 }

@@ -63,5 +63,4 @@ public class Seller extends BaseEntity {
         this.businessAddress = businessAddress;
         this.customerServiceNumber = customerServiceNumber;
     }
-
 }
