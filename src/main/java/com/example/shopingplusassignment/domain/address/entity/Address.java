@@ -75,5 +75,17 @@ public class Address {
 		if(dto.getIsDefaultAddress() != null) this.isDefaultAddress = dto.getIsDefaultAddress();
 	}
 
+	/**
+	 * LockTest용 생성자
+	 */
 
+	public Address(User user, Long zipCode, String address, String recipient, String recipientNumber, String deliveryDescription, Boolean isDefaultAddress) {
+		this.user = user;
+		this.zipCode = zipCode;
+		this.address = address;
+		this.recipient = recipient;
+		this.recipientNumber = recipientNumber;
+		this.deliveryDescription = deliveryDescription;
+		this.isDefaultAddress = isDefaultAddress;
+	}
 }

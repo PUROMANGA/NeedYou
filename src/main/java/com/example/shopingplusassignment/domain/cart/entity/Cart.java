@@ -37,4 +37,10 @@ public class Cart extends BaseEntity {
         this.userId = userId;
         this.amount = cartRequestDto.getAmount();
     }
+
+    public Cart(Long productId, Long userId, Long amount) {
+        this.productId = productId;
+        this.userId = userId;
+        this.amount = amount;
+    }
 }
