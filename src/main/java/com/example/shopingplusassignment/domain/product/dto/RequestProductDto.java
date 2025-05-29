@@ -23,4 +23,12 @@ public class RequestProductDto {
 
     @NotNull(message = "카테고리를 선택해주세요")
     private ProductCategory productCategory;
+
+    public RequestProductDto(String name, String description, Long price, Long stock, ProductCategory productCategory) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.productCategory = productCategory;
+    }
 }

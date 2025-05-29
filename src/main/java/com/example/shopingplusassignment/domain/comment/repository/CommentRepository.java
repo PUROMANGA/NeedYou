@@ -1,5 +1,6 @@
 package com.example.shopingplusassignment.domain.comment.repository;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -13,6 +14,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long>, Comment
 	@EntityGraph(attributePaths = {"user"})
 	Optional<Comment> findByIdAndDeletedAtIsNull(Long id);
 
+	long countByProductIdAndDeletedAtIsNull(Long product_id);
 
 	// Page<Comment> findAllByRatingBetweenAndDeletedAtIsNull(int min, int max, Pageable pageable);
 
