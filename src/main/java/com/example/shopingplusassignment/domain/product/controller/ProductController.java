@@ -6,6 +6,7 @@ import com.example.shopingplusassignment.domain.product.common.ProductCategory;
 import com.example.shopingplusassignment.domain.product.dto.RequestProductDto;
 import com.example.shopingplusassignment.domain.product.dto.ResponseProductDto;
 import com.example.shopingplusassignment.domain.product.service.ProductService;
+import com.example.shopingplusassignment.domain.redis.RecentProductService;
 import com.example.shopingplusassignment.domain.user.entity.User;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -22,12 +23,15 @@ import java.util.List;
 
 import static org.springframework.data.domain.Sort.Direction.DESC;
 
+import java.util.Set;
+
 @RestController
 @RequiredArgsConstructor
 
 public class ProductController {
 
     private final ProductService productService;
+    private final RecentProductService recentProductService;
 
     /**
      * 로그인된 판매자의 email로 seller 객체를 찾아주고, brandId로 brand를 찾아준다음, product 객체에 저장시키고, db에도 저장합니다.
@@ -86,7 +90,10 @@ public class ProductController {
      */
     @GetMapping("/products/{productId}")
     public ResponseEntity<ResponseProductDto> getProductController(
-            @PathVariable Long productId) {
+            @PathVariable Long productId,
+            @AuthenticationPrincipal AuthUser user
+    ) {
+        recentProductService.saveRecentProduct(user.getUser().getId(), productId);
         return ResponseEntity.ok(productService.getProductService(productId));
     }
 
@@ -104,6 +111,14 @@ public class ProductController {
             @PageableDefault(size = 10, sort = "creatTime", direction = DESC) Pageable pageable) {
         return ResponseEntity.ok(productService.searchProductService(keyword, pageable, user.getUsername()));
     }
+
+
+    @GetMapping("/products/recent")
+    public ResponseEntity<Set<Long>> getRecentViewedProducts(
+        @AuthenticationPrincipal AuthUser user) {
+
+        Set<Long> recentProductIds = recentProductService.getRecentProduct(user.getUser().getId(), 5);
+        return ResponseEntity.ok(recentProductIds);
 
 
     /**
